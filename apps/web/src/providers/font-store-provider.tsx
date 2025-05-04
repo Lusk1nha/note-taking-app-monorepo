@@ -38,35 +38,27 @@ interface FontStoreProviderProps {
   initialState?: FontStore;
 }
 
-export function fontMapper(font: FontEnum) {
-  switch (font) {
-    case FontEnum.SansSerif:
-      return interFont.className;
-    case FontEnum.Serif:
-      return notoSerif.className;
-    case FontEnum.Monospace:
-      return sourceCodePro.className;
-  }
-}
+const fontMapper = (font: FontEnum) => fonts[font].className;
+
+const fonts = {
+  [FontEnum.SansSerif]: interFont,
+  [FontEnum.Serif]: notoSerif,
+  [FontEnum.Monospace]: sourceCodePro,
+};
 
 export function FontStoreProvider(props: Readonly<FontStoreProviderProps>) {
   const { children, storageKey, initialState } = props;
 
-  const storeRef = useRef<FontStoreApi | null>(null);
-
-  if (storeRef.current === null) {
-    storeRef.current = createFontStore(storageKey, initialState);
-  }
+  const storeRef = useRef<FontStoreApi>(
+    createFontStore(storageKey, initialState),
+  );
 
   const currentFont = useStore(storeRef.current, (state) => state.currentFont);
-  const currentFontClassName = useMemo(
-    () => fontMapper(currentFont),
-    [currentFont],
-  );
+  const fontClassName = useMemo(() => fontMapper(currentFont), [currentFont]);
 
   return (
     <FontStoreContext.Provider value={storeRef.current}>
-      <div data-testid="font-provider" className={cn(currentFontClassName)}>
+      <div data-testid="font-provider" className={cn(fontClassName)}>
         {children}
       </div>
     </FontStoreContext.Provider>
