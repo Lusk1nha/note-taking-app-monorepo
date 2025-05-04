@@ -1,0 +1,15 @@
+@import '@note-taking-app/design-system/theme.css';
+
+@theme {
+  --color-background-dashboard: var(--theme-background-dashboard);
+}
+
+@layer base {
+  :root {
+    --theme-background-dashboard: var(--color-system-neutral-0);
+  }
+
+  [data-theme='dark'] {
+    --theme-background-dashboard: var(--color-system-neutral-950);
+  }
+}

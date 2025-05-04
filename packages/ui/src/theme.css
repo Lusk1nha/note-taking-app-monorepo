@@ -1,0 +1,12 @@
+@import '@note-taking-app/design-system/theme.css';
+
+@theme {
+}
+
+@layer base {
+  :root {
+  }
+
+  [data-theme='dark'] {
+  }
+}

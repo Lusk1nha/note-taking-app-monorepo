@@ -3,3 +3,5 @@ packages:
   - packages/*
 ignoredBuiltDependencies:
   - unrs-resolver
+onlyBuiltDependencies:
+  - core-js-pure

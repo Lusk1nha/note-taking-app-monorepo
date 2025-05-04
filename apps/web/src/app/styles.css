@@ -1,0 +1,145 @@
+@import 'tailwindcss';
+@import '@note-taking-app/design-system/theme.css';
+@import './theme.css';
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@layer utilities {
+  .system-preset-1 {
+    font-size: var(--text-preset-1);
+    line-height: var(--text-preset-1--line-height);
+    letter-spacing: var(--text-preset-1--letter-spacing);
+    font-weight: var(--text-preset-1--font-weight);
+  }
+
+  .system-preset-2 {
+    font-size: var(--text-preset-2);
+    line-height: var(--text-preset-2--line-height);
+    letter-spacing: var(--text-preset-2--letter-spacing);
+    font-weight: var(--text-preset-2--font-weight);
+  }
+
+  .system-preset-3 {
+    font-size: var(--text-preset-3);
+    line-height: var(--text-preset-3--line-height);
+    letter-spacing: var(--text-preset-3--letter-spacing);
+    font-weight: var(--text-preset-3--font-weight);
+  }
+
+  .system-preset-4 {
+    font-size: var(--text-preset-4);
+    line-height: var(--text-preset-4--line-height);
+    letter-spacing: var(--text-preset-4--letter-spacing);
+    font-weight: var(--text-preset-4--font-weight);
+  }
+
+  .system-preset-5 {
+    font-size: var(--text-preset-5);
+    line-height: var(--text-preset-5--line-height);
+    letter-spacing: var(--text-preset-5--letter-spacing);
+    font-weight: var(--text-preset-5--font-weight);
+  }
+
+  .system-preset-6 {
+    font-size: var(--text-preset-6);
+    line-height: var(--text-preset-6--line-height);
+    letter-spacing: var(--text-preset-6--letter-spacing);
+    font-weight: var(--text-preset-6--font-weight);
+  }
+
+  /* .system-notoserif-preset-1 {
+    font-size: var(--text-preset-notoserif-1);
+    line-height: var(--text-preset-notoserif-1--line-height);
+    letter-spacing: var(--text-preset-notoserif-1--letter-spacing);
+    font-weight: var(--text-preset-notoserif-1--font-weight);
+    font-family: var(--text-preset-notoserif-1--font-family);
+  }
+
+  .system-notoserif-preset-2 {
+    font-size: var(--text-preset-notoserif-2);
+    line-height: var(--text-preset-notoserif-2--line-height);
+    letter-spacing: var(--text-preset-notoserif-2--letter-spacing);
+    font-weight: var(--text-preset-notoserif-2--font-weight);
+    font-family: var(--text-preset-notoserif-2--font-family);
+  }
+
+  .system-notoserif-preset-3 {
+    font-size: var(--text-preset-notoserif-3);
+    line-height: var(--text-preset-notoserif-3--line-height);
+    letter-spacing: var(--text-preset-notoserif-3--letter-spacing);
+    font-weight: var(--text-preset-notoserif-3--font-weight);
+    font-family: var(--text-preset-notoserif-3--font-family);
+  }
+
+  .system-notoserif-preset-4 {
+    font-size: var(--text-preset-notoserif-4);
+    line-height: var(--text-preset-notoserif-4--line-height);
+    letter-spacing: var(--text-preset-notoserif-4--letter-spacing);
+    font-weight: var(--text-preset-notoserif-4--font-weight);
+    font-family: var(--text-preset-notoserif-4--font-family);
+  }
+
+  .system-notoserif-preset-5 {
+    font-size: var(--text-preset-notoserif-5);
+    line-height: var(--text-preset-notoserif-5--line-height);
+    letter-spacing: var(--text-preset-notoserif-5--letter-spacing);
+    font-weight: var(--text-preset-notoserif-5--font-weight);
+    font-family: var(--text-preset-notoserif-5--font-family);
+  }
+
+  .system-notoserif-preset-6 {
+    font-size: var(--text-preset-notoserif-6);
+    line-height: var(--text-preset-notoserif-6--line-height);
+    letter-spacing: var(--text-preset-notoserif-6--letter-spacing);
+    font-weight: var(--text-preset-notoserif-6--font-weight);
+    font-family: var(--text-preset-notoserif-6--font-family);
+  }
+
+  .system-sourcepro-preset-1 {
+    font-size: var(--text-preset-sourcepro-1);
+    line-height: var(--text-preset-sourcepro-1--line-height);
+    letter-spacing: var(--text-preset-sourcepro-1--letter-spacing);
+    font-weight: var(--text-preset-sourcepro-1--font-weight);
+    font-family: var(--text-preset-sourcepro-1--font-family);
+  }
+
+  .system-sourcepro-preset-2 {
+    font-size: var(--text-preset-sourcepro-2);
+    line-height: var(--text-preset-sourcepro-2--line-height);
+    letter-spacing: var(--text-preset-sourcepro-2--letter-spacing);
+    font-weight: var(--text-preset-sourcepro-2--font-weight);
+    font-family: var(--text-preset-sourcepro-2--font-family);
+  }
+
+  .system-sourcepro-preset-3 {
+    font-size: var(--text-preset-sourcepro-3);
+    line-height: var(--text-preset-sourcepro-3--line-height);
+    letter-spacing: var(--text-preset-sourcepro-3--letter-spacing);
+    font-weight: var(--text-preset-sourcepro-3--font-weight);
+    font-family: var(--text-preset-sourcepro-3--font-family);
+  }
+
+  .system-sourcepro-preset-4 {
+    font-size: var(--text-preset-sourcepro-4);
+    line-height: var(--text-preset-sourcepro-4--line-height);
+    letter-spacing: var(--text-preset-sourcepro-4--letter-spacing);
+    font-weight: var(--text-preset-sourcepro-4--font-weight);
+    font-family: var(--text-preset-sourcepro-4--font-family);
+  }
+
+  .system-sourcepro-preset-5 {
+    font-size: var(--text-preset-sourcepro-5);
+    line-height: var(--text-preset-sourcepro-5--line-height);
+    letter-spacing: var(--text-preset-sourcepro-5--letter-spacing);
+    font-weight: var(--text-preset-sourcepro-5--font-weight);
+    font-family: var(--text-preset-sourcepro-5--font-family);
+  }
+
+  .system-sourcepro-preset-6 {
+    font-size: var(--text-preset-sourcepro-6);
+    line-height: var(--text-preset-sourcepro-6--line-height);
+    letter-spacing: var(--text-preset-sourcepro-6--letter-spacing);
+    font-weight: var(--text-preset-sourcepro-6--font-weight);
+    font-family: var(--text-preset-sourcepro-6--font-family);
+  } */
+}

@@ -1,5 +1,5 @@
 {
   "extends": "@note-taking-app/typescript-config/react-library.json",
-  "include": ["."],
+  "include": [".", ".eslintrc.js"],
   "exclude": ["dist", "build", "node_modules"]
 }
