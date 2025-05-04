@@ -1,6 +1,10 @@
 @import '@note-taking-app/design-system/theme.css';
 
 @theme {
+  --font-inter: 'Inter', sans-serif;
+  --font-noto-sans: 'Noto Serif', serif;
+  --font-source-code-pro: 'Source Code Pro', monospace;
+
   --color-background-dashboard: var(--theme-background-dashboard);
 }
 
