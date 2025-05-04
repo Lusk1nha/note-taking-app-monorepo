@@ -1,0 +1,23 @@
+{
+  "name": "note-taking-app",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
+    "format": "pnpm dprint fmt"
+  },
+  "packageManager": "pnpm@10.7.1",
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "dprint": "^0.49.1",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "turbo": "^2.5.2",
+    "typescript": "^5.8.3"
+  }
+}
