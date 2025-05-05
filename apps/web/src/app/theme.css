@@ -5,15 +5,74 @@
   --font-noto-sans: 'Noto Serif', serif;
   --font-source-code-pro: 'Source Code Pro', monospace;
 
-  --color-background-dashboard: var(--theme-background-dashboard);
+  /* Application Colors */
+  --color-dashboard-base: var(--theme-dashboard-base);
+
+  /* Mobile Navbar */
+  --color-mobile-navbar-base: var(--theme-mobile-navbar-base);
+  --color-mobile-navbar-text: var(--theme-mobile-navbar-text);
+
+  /* Mobile Bottom Navigation */
+  --color-mobile-bottom-navigation-base: var(
+    --theme-mobile-bottom-navigation-base
+  );
+  --color-mobile-bottom-navigation-border: var(
+    --theme-mobile-bottom-navigation-border
+  );
+  --color-mobile-bottom-navigation-icon-text: var(
+    --theme-mobile-bottom-navigation-icon-text
+  );
+  --color-mobile-bottom-navigation-text: var(
+    --theme-mobile-bottom-navigation-text
+  );
+  --color-mobile-bottom-navigation-icon-base-active: var(
+    --theme-mobile-bottom-navigation-icon-base-active
+  );
+  --color-mobile-bottom-navigation-icon-text-active: var(
+    --theme-mobile-bottom-navigation-icon-text-active
+  );
+  --color-mobile-bottom-navigation-text-active: var(
+    --theme-mobile-bottom-navigation-text-active
+  );
 }
 
 @layer base {
   :root {
-    --theme-background-dashboard: var(--color-system-neutral-0);
+    --theme-dashboard-base: var(--color-system-neutral-0);
+
+    --theme-mobile-navbar-base: var(--color-system-neutral-100);
+    --theme-mobile-navbar-text: var(--color-system-neutral-950);
+
+    --theme-mobile-bottom-navigation-base: var(--color-system-neutral-0);
+    --theme-mobile-bottom-navigation-border: var(--color-system-neutral-200);
+    --theme-mobile-bottom-navigation-icon-text: var(--color-system-neutral-600);
+    --theme-mobile-bottom-navigation-text: var(--color-system-neutral-600);
+    --theme-mobile-bottom-navigation-icon-base-active: var(
+      --color-system-blue-50
+    );
+    --theme-mobile-bottom-navigation-icon-text-active: var(
+      --color-system-blue-500
+    );
+    --theme-mobile-bottom-navigation-text-active: var(--color-system-blue-500);
   }
 
   [data-theme='dark'] {
-    --theme-background-dashboard: var(--color-system-neutral-950);
+    --theme-dashboard-base: var(--color-system-neutral-950);
+
+    --theme-mobile-navbar-base: var(--color-system-neutral-800);
+    --theme-mobile-navbar-text: var(--color-system-neutral-0);
+
+    --theme-mobile-bottom-navigation-base: var(--color-system-neutral-950);
+    --theme-mobile-bottom-navigation-border: var(--color-system-neutral-800);
+
+    --theme-mobile-bottom-navigation-icon-text: var(--color-system-neutral-400);
+    --theme-mobile-bottom-navigation-text: var(--color-system-neutral-400);
+    --theme-mobile-bottom-navigation-icon-base-active: var(
+      --color-system-neutral-700
+    );
+    --theme-mobile-bottom-navigation-icon-text-active: var(
+      --color-system-blue-500
+    );
+    --theme-mobile-bottom-navigation-text-active: var(--color-system-blue-500);
   }
 }

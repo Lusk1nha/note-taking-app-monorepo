@@ -6,7 +6,7 @@ export default function RootTemplate(props: Readonly<NextArtefactProps>) {
   return (
     <div
       id="root-template-container"
-      className="bg-background-dashboard w-full"
+      className="bg-dashboard-base w-full h-screen"
     >
       {children}
     </div>

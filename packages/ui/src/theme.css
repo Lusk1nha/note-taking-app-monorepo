@@ -1,12 +1,19 @@
 @import '@note-taking-app/design-system/theme.css';
 
 @theme {
+  --color-separator-default-base: var(--theme-separator-default-base);
+
+  --color-title-default-text: var(--theme-title-default-text);
 }
 
 @layer base {
   :root {
+    --theme-separator-default-base: var(--color-system-neutral-100);
+    --theme-title-default-text: var(--color-system-neutral-950);
   }
 
   [data-theme='dark'] {
+    --theme-separator-default-base: var(--color-system-neutral-800);
+    --theme-title-default-text: var(--color-system-neutral-0);
   }
 }

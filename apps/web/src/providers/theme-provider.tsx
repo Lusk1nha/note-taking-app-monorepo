@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
+import * as React from 'react';
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
 
 export function ThemeProvider({
   children,
@@ -13,7 +13,6 @@ export function ThemeProvider({
     setIsMounted(true);
   }, []);
 
-  // Prevents hydration mismatch error in Next.js
   if (!isMounted) {
     return null;
   }

@@ -15,19 +15,16 @@ bootstrap();
 export const metadata: Metadata = {
   title: APP_NAME,
   description: APP_DESCRIPTION,
+
+  icons: {
+    icon: '/assets/images/favicon-32x32.png',
+    shortcut: '/assets/images/favicon-32x32.png',
+  },
 };
 
 export default function RootLayout({ children }: Readonly<NextArtefactProps>) {
   return (
     <html lang="en">
-      <head>
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/assets/images/favicon-32x32.png"
-        />
-      </head>
       <body>
         <SystemProviders>{children}</SystemProviders>
       </body>

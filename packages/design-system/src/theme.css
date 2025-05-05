@@ -54,6 +54,13 @@
   --radius-20: 1.25rem; /* 20px */
   --radius-24: 1.5rem; /* 24px */
 
+  /* Shadows */
+  --shadow-small: 0px 4px 6px 0px rgba(0, 0, 0, 0.06);
+  --shadow-inverse-small: 0px -4px 6px 0px rgba(0, 0, 0, 0.06);
+
+  --shadow-large: 0px 8px 12px 0px rgba(240, 240, 240, 0.06);
+  --shadow-inverse-large: 0px -8px 12px 0px rgba(240, 240, 240, 0.06);
+
   /* Text Inter */
   --text-preset-1: 1.5rem; /* 24px */
   --text-preset-1--line-height: 1.8rem; /* 120% */
