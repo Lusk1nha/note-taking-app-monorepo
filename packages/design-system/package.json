@@ -16,7 +16,14 @@
     "./settings-icon.tsx": "./src/components/settings-icon.tsx",
     "./tag-icon.tsx": "./src/components/tag-icon.tsx",
     "./archive-icon.tsx": "./src/components/archive-icon.tsx",
-    "./search-icon.tsx": "./src/components/search-icon.tsx"
+    "./search-icon.tsx": "./src/components/search-icon.tsx",
+    "./arrow-icon.tsx": "./src/components/arrow-icon.tsx",
+    "./sun-icon.tsx": "./src/components/sun-icon.tsx",
+    "./moon-icon.tsx": "./src/components/moon-icon.tsx",
+    "./logout-icon.tsx": "./src/components/logout-icon.tsx",
+    "./lock-icon.tsx": "./src/components/lock-icon.tsx",
+    "./font-icon.tsx": "./src/components/font-icon.tsx",
+    "./system-icon.tsx": "./src/components/system-icon.tsx"
   },
   "scripts": {
     "build": "tailwindcss -i ./src/styles.css -o ./dist/styles.css",

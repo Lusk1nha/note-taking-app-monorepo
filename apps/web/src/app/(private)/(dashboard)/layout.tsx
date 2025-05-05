@@ -6,7 +6,7 @@ import { Navbar } from '@/components/navbar/navbar';
 export default function DashboardLayout(props: Readonly<NextArtefactProps>) {
   const { children } = props;
   return (
-    <div className="w-full">
+    <div className="w-full h-screen">
       <Navbar />
       {children}
       <BottomNavigation />

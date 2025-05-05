@@ -5,6 +5,12 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @layer utilities {
+  * {
+    @apply border-border-base;
+  }
+}
+
+@layer utilities {
   .system-preset-1 {
     font-size: var(--text-preset-1);
     line-height: var(--text-preset-1--line-height);

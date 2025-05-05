@@ -7,6 +7,7 @@
 
   /* Application Colors */
   --color-dashboard-base: var(--theme-dashboard-base);
+  --color-border-base: var(--theme-border-base);
 
   /* Mobile Navbar */
   --color-mobile-navbar-base: var(--theme-mobile-navbar-base);
@@ -34,11 +35,24 @@
   --color-mobile-bottom-navigation-text-active: var(
     --theme-mobile-bottom-navigation-text-active
   );
+
+  /* Setting Navigation */
+  --color-setting-navigation-base-active: var(
+    --theme-setting-navigation-base-active
+  );
+  --color-setting-navigation-icon-text-active: var(
+    --theme-setting-navigation-icon-text-active
+  );
+  --color-setting-navigation-text: var(--theme-setting-navigation-text);
+  --color-setting-navigation-text-active: var(
+    --theme-setting-navigation-text-active
+  );
 }
 
 @layer base {
   :root {
     --theme-dashboard-base: var(--color-system-neutral-0);
+    --theme-border-base: var(--color-system-neutral-200);
 
     --theme-mobile-navbar-base: var(--color-system-neutral-100);
     --theme-mobile-navbar-text: var(--color-system-neutral-950);
@@ -54,10 +68,18 @@
       --color-system-blue-500
     );
     --theme-mobile-bottom-navigation-text-active: var(--color-system-blue-500);
+
+    --theme-setting-navigation-base-active: var(--color-system-neutral-100);
+    --theme-setting-navigation-icon-text-active: var(
+      --color-system-neutral-950
+    );
+    --theme-setting-navigation-text: var(--color-system-neutral-700);
+    --theme-setting-navigation-text-active: var(--color-system-neutral-950);
   }
 
   [data-theme='dark'] {
     --theme-dashboard-base: var(--color-system-neutral-950);
+    --theme-border-base: var(--color-system-neutral-800);
 
     --theme-mobile-navbar-base: var(--color-system-neutral-800);
     --theme-mobile-navbar-text: var(--color-system-neutral-0);
@@ -74,5 +96,10 @@
       --color-system-blue-500
     );
     --theme-mobile-bottom-navigation-text-active: var(--color-system-blue-500);
+
+    --theme-setting-navigation-base-active: var(--color-system-neutral-800);
+    --theme-setting-navigation-icon-text-active: var(--color-system-blue-500);
+    --theme-setting-navigation-text: var(--color-system-neutral-0);
+    --theme-setting-navigation-text-active: var(--color-system-neutral-0);
   }
 }

@@ -23,7 +23,8 @@
     "./theme.css": "./src/theme.css",
     "./styles.css": "./dist/styles.css",
     "./separator": "./src/components/separator.tsx",
-    "./title": "./src/components/title.tsx"
+    "./title": "./src/components/title.tsx",
+    "./text": "./src/components/text.tsx"
   },
   "devDependencies": {
     "@note-taking-app/eslint-config": "workspace:*",
