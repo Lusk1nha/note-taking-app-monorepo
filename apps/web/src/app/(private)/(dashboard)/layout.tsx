@@ -1,15 +1,26 @@
 import { NextArtefactProps } from '@/shared/common/next-types';
 
-import { BottomNavigation } from '@/components/bottom-navigation/bottom-navigation';
-import { Navbar } from '@/components/navbar/navbar';
+interface DashboardLayoutProps extends NextArtefactProps {
+  sidebar: React.ReactNode;
+  navbar: React.ReactNode;
+  bottomNavigations: React.ReactNode;
+}
 
-export default function DashboardLayout(props: Readonly<NextArtefactProps>) {
-  const { children } = props;
+export default function DashboardLayout({
+  children,
+  sidebar,
+  navbar,
+  bottomNavigations,
+}: Readonly<DashboardLayoutProps>) {
   return (
     <div className="w-full h-screen">
-      <Navbar />
-      {children}
-      <BottomNavigation />
+      {navbar}
+      <div className="flex w-full h-full">
+        {sidebar}
+
+        <div>{children}</div>
+      </div>
+      {bottomNavigations}
     </div>
   );
 }

@@ -1,5 +1,4 @@
-import { ColorForm } from './_components/color-form';
-
+import { ColorThemeForm } from '@/components/forms/color-theme-form';
 import { AudienceHeaderContainer } from '../_components/audience-header-container';
 import React from 'react';
 
@@ -11,7 +10,7 @@ export default function ColorThemePage() {
         description="Choose your color theme:"
       />
 
-      <ColorForm />
+      <ColorThemeForm />
     </React.Fragment>
   );
 }

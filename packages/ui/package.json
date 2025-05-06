@@ -24,7 +24,9 @@
     "./styles.css": "./dist/styles.css",
     "./separator": "./src/components/separator.tsx",
     "./title": "./src/components/title.tsx",
-    "./text": "./src/components/text.tsx"
+    "./text": "./src/components/text.tsx",
+    "./button": "./src/components/button.tsx",
+    "./option-selector": "./src/components/option-selector.tsx"
   },
   "devDependencies": {
     "@note-taking-app/eslint-config": "workspace:*",

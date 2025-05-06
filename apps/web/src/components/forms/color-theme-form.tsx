@@ -1,10 +1,11 @@
 'use client';
 
-import { OptionSelector } from '@/components/inputs/option-selector/option-selector';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { MoonIcon } from '@note-taking-app/design-system/moon-icon.tsx';
 import { SunIcon } from '@note-taking-app/design-system/sun-icon.tsx';
 import { SystemIcon } from '@note-taking-app/design-system/system-icon.tsx';
+import { OptionSelector } from '@note-taking-app/ui/option-selector';
+import { Button } from '@note-taking-app/ui/button';
 import { useTheme } from 'next-themes';
 
 import { Controller, useForm } from 'react-hook-form';
@@ -16,7 +17,7 @@ const colorValidation = z.object({
 
 type ColorFormType = z.infer<typeof colorValidation>;
 
-export function ColorForm() {
+export function ColorThemeForm() {
   const { theme, setTheme } = useTheme();
 
   const form = useForm<ColorFormType>({
@@ -47,27 +48,27 @@ export function ColorForm() {
                 id: 'light',
                 name: 'Light Mode',
                 description: 'Pick a clean and classic light theme',
-                icon: <SunIcon className="h-10 w-10 text-gray-500" />,
+                icon: <SunIcon className="h-6 w-6" />,
               },
               {
                 id: 'dark',
                 name: 'Dark Mode',
                 description: 'Select a sleek and modern dark theme',
-                icon: <MoonIcon className="h-10 w-10 text-gray-500" />,
+                icon: <MoonIcon className="h-6 w-6" />,
               },
               {
                 id: 'system',
                 name: 'System',
                 description: 'Adapts to your device’s theme',
-                icon: <SystemIcon className="h-10 w-10 text-gray-500" />,
+                icon: <SystemIcon className="h-6 w-6" />,
               },
             ]}
           />
         )}
       />
 
-      <div>
-        <button type="submit">Apply Changes</button>
+      <div className="flex justify-end">
+        <Button type="submit">Apply Changes</Button>
       </div>
     </form>
   );

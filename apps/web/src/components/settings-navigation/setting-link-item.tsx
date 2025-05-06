@@ -4,7 +4,7 @@ import { PathSettings } from '@/shared/common/app-paths';
 import { Text } from '@note-taking-app/ui/text';
 import { cn } from '@note-taking-app/utils/cn';
 
-import { ArrowIcon } from '@note-taking-app/design-system/arrow-icon.tsx';
+import { ChevronIcon } from '@note-taking-app/design-system/chevron-icon.tsx';
 
 interface SettingLinkItemProps {
   path: PathSettings;
@@ -46,7 +46,7 @@ export function SettingLinkItem(props: Readonly<SettingLinkItemProps>) {
         </div>
 
         {isActive && (
-          <ArrowIcon className="text-setting-navigation-icon-text-active" />
+          <ChevronIcon className="text-setting-navigation-icon-text-active" />
         )}
       </div>
     </Link>

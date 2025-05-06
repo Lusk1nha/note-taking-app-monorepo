@@ -1,21 +1,175 @@
 @import '@note-taking-app/design-system/theme.css';
 
 @theme {
+  /* Separator */
   --color-separator-default-base: var(--theme-separator-default-base);
+
+  /* Title */
   --color-title-default-text: var(--theme-title-default-text);
+
+  /* Text */
   --color-text-default-text: var(--theme-text-default-text);
+
+  /* Option Selector */
+  --color-option-selector-default-base: var(
+    --theme-option-selector-default-base
+  );
+  --color-option-selector-default-border: var(
+    --theme-option-selector-default-border
+  );
+  --color-option-selector-default-text: var(
+    --theme-option-selector-default-text
+  );
+  --color-option-selector-default-description: var(
+    --theme-option-selector-default-description
+  );
+  --color-option-selector-default-icon-base: var(
+    --theme-option-selector-default-icon-base
+  );
+  --color-option-selector-default-check-base: var(
+    --theme-option-selector-default-check-base
+  );
+  --color-option-selector-default-check-dot: var(
+    --theme-option-selector-default-check-dot
+  );
+  --color-option-selector-default-check-base-active: var(
+    --theme-option-selector-default-check-base-active
+  );
+  --color-option-selector-default-check-dot-active: var(
+    --theme-option-selector-default-check-dot-active
+  );
+  --color-option-selector-default-base-active: var(
+    --theme-option-selector-default-base-active
+  );
+  --color-option-selector-default-border-active: var(
+    --theme-option-selector-default-border-active
+  );
+
+  /* Button Primary */
+  --color-button-primary-base: var(--theme-button-primary-base);
+  --color-button-primary-base-hover: var(--theme-button-primary-base-hover);
+  --color-button-primary-text: var(--theme-button-primary-text);
+  --color-button-primary-ring-active: var(--theme-button-primary-ring-active);
+  --color-button-primary-ring-offset: var(--theme-button-primary-ring-offset);
+  --color-button-primary-base-disabled: var(
+    --theme-button-primary-base-disabled
+  );
+  --color-button-primary-text-disabled: var(
+    --theme-button-primary-text-disabled
+  );
+
+  /* Button Ghost */
+  --color-button-ghost-base: var(--theme-button-ghost-base);
+  --color-button-ghost-base-hover: var(--theme-button-ghost-base-hover);
+  --color-button-ghost-text: var(--theme-button-ghost-text);
+  --color-button-ghost-ring-active: var(--theme-button-ghost-ring-active);
+  --color-button-ghost-ring-offset: var(--theme-button-ghost-ring-offset);
+  --color-button-ghost-base-disabled: var(--theme-button-ghost-base-disabled);
+  --color-button-ghost-text-disabled: var(--theme-button-ghost-text-disabled);
 }
 
 @layer base {
   :root {
+    /* Separator */
     --theme-separator-default-base: var(--color-system-neutral-100);
+
+    /* Title */
     --theme-title-default-text: var(--color-system-neutral-950);
+
+    /* Text */
     --theme-text-default-text: var(--color-system-neutral-950);
+
+    /* Option Selector */
+    --theme-option-selector-default-base: var(--color-system-neutral-0);
+    --theme-option-selector-default-border: var(--color-system-neutral-200);
+    --theme-option-selector-default-text: var(--color-system-neutral-950);
+    --theme-option-selector-default-description: var(
+      --color-system-neutral-700
+    );
+    --theme-option-selector-default-icon-base: var(--color-system-neutral-0);
+    --theme-option-selector-default-check-base: var(--color-system-neutral-200);
+    --theme-option-selector-default-check-dot: var(--color-system-neutral-0);
+    --theme-option-selector-default-check-base-active: var(
+      --color-system-blue-500
+    );
+    --theme-option-selector-default-check-dot-active: var(
+      --color-system-neutral-0
+    );
+    --theme-option-selector-default-base-active: var(
+      --color-system-neutral-100
+    );
+    --theme-option-selector-default-border-active: var(
+      --color-system-neutral-200
+    );
+
+    /* Button Primary */
+    --theme-button-primary-base: var(--color-system-blue-500);
+    --theme-button-primary-base-hover: var(--color-system-blue-700);
+    --theme-button-primary-text: var(--color-system-neutral-0);
+    --theme-button-primary-ring-active: var(--color-system-neutral-400);
+    --theme-button-primary-ring-offset: var(--color-system-neutral-0);
+    --theme-button-primary-base-disabled: var(--color-system-neutral-100);
+    --theme-button-primary-text-disabled: var(--color-system-neutral-300);
+
+    /* Button Ghost */
+    --theme-button-ghost-base: transparent;
+    --theme-button-ghost-base-hover: var(--color-system-neutral-200);
+    --theme-button-ghost-text: var(--color-system-neutral-600);
+    --theme-button-ghost-ring-active: var(--color-system-neutral-400);
+    --theme-button-ghost-ring-offset: var(--color-system-neutral-0);
+    --theme-button-ghost-base-disabled: var(--color-system-neutral-100);
+    --theme-button-ghost-text-disabled: var(--color-system-neutral-300);
   }
 
   [data-theme='dark'] {
+    /* Separator */
     --theme-separator-default-base: var(--color-system-neutral-800);
+
+    /* Title */
     --theme-title-default-text: var(--color-system-neutral-0);
+
+    /* Text */
     --theme-text-default-text: var(--color-system-neutral-0);
+
+    /* Option Selector */
+    --theme-option-selector-default-base: var(--color-system-neutral-950);
+    --theme-option-selector-default-border: var(--color-system-neutral-800);
+    --theme-option-selector-default-text: var(--color-system-neutral-0);
+    --theme-option-selector-default-description: var(
+      --color-system-neutral-300
+    );
+    --theme-option-selector-default-icon-base: var(--color-system-neutral-950);
+    --theme-option-selector-default-check-base: var(--color-system-neutral-600);
+    --theme-option-selector-default-check-dot: var(--color-system-neutral-800);
+    --theme-option-selector-default-check-base-active: var(
+      --color-system-blue-500
+    );
+    --theme-option-selector-default-check-dot-active: var(
+      --color-system-neutral-800
+    );
+    --theme-option-selector-default-base-active: var(
+      --color-system-neutral-800
+    );
+    --theme-option-selector-default-border-active: var(
+      --color-system-neutral-700
+    );
+
+    /* Button Primary */
+    --theme-button-primary-base: var(--color-system-blue-500);
+    --theme-button-primary-base-hover: var(--color-system-blue-700);
+    --theme-button-primary-text: var(--color-system-neutral-0);
+    --theme-button-primary-ring-active: var(--color-system-neutral-400);
+    --theme-button-primary-ring-offset: var(--color-system-neutral-950);
+    --theme-button-primary-base-disabled: var(--color-system-neutral-100);
+    --theme-button-primary-text-disabled: var(--color-system-neutral-300);
+
+    /* Button Ghost */
+    --theme-button-ghost-base: transparent;
+    --theme-button-ghost-base-hover: var(--color-system-neutral-800);
+    --theme-button-ghost-text: var(--color-system-neutral-300);
+    --theme-button-ghost-ring-active: var(--color-system-neutral-400);
+    --theme-button-ghost-ring-offset: var(--color-system-neutral-950);
+    --theme-button-ghost-base-disabled: var(--color-system-neutral-100);
+    --theme-button-ghost-text-disabled: var(--color-system-neutral-300);
   }
 }
