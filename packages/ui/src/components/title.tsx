@@ -6,9 +6,10 @@ const titleVariants = cva('antialiased', {
   variants: {
     variant: {
       default: 'text-title-default-text',
+      secondary: 'text-title-secondary-text',
     },
     size: {
-      default: '',
+      default: 'system-preset-4',
       xl: 'system-preset-1',
     },
   },

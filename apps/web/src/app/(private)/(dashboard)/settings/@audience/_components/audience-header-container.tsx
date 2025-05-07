@@ -1,6 +1,5 @@
 'use client';
 
-import { FadeAnimate } from '@/components/utilities/animation';
 import { Text } from '@note-taking-app/ui/text';
 import { Title } from '@note-taking-app/ui/title';
 
@@ -15,11 +14,9 @@ export function AudienceHeaderContainer(
   const { title, description } = props;
 
   return (
-    <FadeAnimate>
-      <div className="flex flex-col gap-y-100">
-        <Title size="xl">{title}</Title>
-        {description && <Text size="sm">{description}</Text>}
-      </div>
-    </FadeAnimate>
+    <div className="flex flex-col gap-y-100">
+      <Title size="xl">{title}</Title>
+      {description && <Text size="sm">{description}</Text>}
+    </div>
   );
 }

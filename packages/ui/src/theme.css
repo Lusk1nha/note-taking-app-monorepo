@@ -6,6 +6,7 @@
 
   /* Title */
   --color-title-default-text: var(--theme-title-default-text);
+  --color-title-secondary-text: var(--theme-title-secondary-text);
 
   /* Text */
   --color-text-default-text: var(--theme-text-default-text);
@@ -99,6 +100,7 @@
 
     /* Title */
     --theme-title-default-text: var(--color-system-neutral-950);
+    --theme-title-secondary-text: var(--color-system-neutral-500);
 
     /* Text */
     --theme-text-default-text: var(--color-system-neutral-950);
@@ -175,6 +177,7 @@
 
     /* Title */
     --theme-title-default-text: var(--color-system-neutral-0);
+    --theme-title-secondary-text: var(--color-system-neutral-500);
 
     /* Text */
     --theme-text-default-text: var(--color-system-neutral-0);

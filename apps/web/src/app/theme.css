@@ -71,7 +71,7 @@
 
     --theme-setting-navigation-base-active: var(--color-system-neutral-100);
     --theme-setting-navigation-icon-text-active: var(
-      --color-system-neutral-950
+      --color-system-blue-500
     );
     --theme-setting-navigation-text: var(--color-system-neutral-700);
     --theme-setting-navigation-text-active: var(--color-system-neutral-950);

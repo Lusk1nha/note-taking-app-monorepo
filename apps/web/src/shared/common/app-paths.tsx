@@ -22,6 +22,8 @@ export enum AppPaths {
   Tags = '/tags',
   Settings = '/settings',
 
+  SearchTag = '/tags/:tag',
+
   ColorTheme = '/settings/color-theme',
   FontTheme = '/settings/font-theme',
   ChangePassword = '/settings/change-password',
@@ -41,27 +43,27 @@ export const defaultBottomNavigationPaths: PathSettings[] = [
   {
     name: 'Home',
     path: AppPaths.Home,
-    icon: <HomeIcon />,
+    icon: <HomeIcon className="w-5 h-5" />,
   },
   {
     name: 'Search',
     path: AppPaths.Search,
-    icon: <SearchIcon />,
+    icon: <SearchIcon className="w-5 h-5" />,
   },
   {
     name: 'Archive',
     path: AppPaths.Archive,
-    icon: <ArchiveIcon />,
+    icon: <ArchiveIcon className="w-5 h-5" />,
   },
   {
     name: 'Tags',
     path: AppPaths.Tags,
-    icon: <TagIcon />,
+    icon: <TagIcon className="w-5 h-5" />,
   },
   {
     name: 'Settings',
     path: AppPaths.Settings,
-    icon: <SettingsIcon />,
+    icon: <SettingsIcon className="w-5 h-5" />,
     aliasPaths: [
       AppPaths.ColorTheme,
       AppPaths.FontTheme,
@@ -70,26 +72,39 @@ export const defaultBottomNavigationPaths: PathSettings[] = [
   },
 ];
 
+export const defaultSidebarPaths: PathSettings[] = [
+  {
+    name: 'All Notes',
+    path: AppPaths.Home,
+    icon: <HomeIcon className="w-5 h-5" />,
+  },
+  {
+    name: 'Archived Notes',
+    path: AppPaths.Archive,
+    icon: <ArchiveIcon className="w-5 h-5" />,
+  },
+];
+
 export const defaultSettingsPaths: PathSettings[] = [
   {
     name: 'Color Theme',
     path: AppPaths.ColorTheme,
-    icon: <SunIcon />,
+    icon: <SunIcon className="w-5 h-5" />,
   },
   {
     name: 'Font Theme',
     path: AppPaths.FontTheme,
-    icon: <FontIcon />,
+    icon: <FontIcon className="w-5 h-5" />,
   },
   {
     name: 'Change Password',
     path: AppPaths.ChangePassword,
-    icon: <LockIcon />,
+    icon: <LockIcon className="w-5 h-5" />,
   },
 ];
 
 export const logoutPath: PathSettings = {
   name: 'Logout',
   path: AppPaths.Logout,
-  icon: <LogoutIcon />,
+  icon: <LogoutIcon className="w-5 h-5" />,
 };
