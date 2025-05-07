@@ -66,12 +66,36 @@
   --color-button-ghost-ring-offset: var(--theme-button-ghost-ring-offset);
   --color-button-ghost-base-disabled: var(--theme-button-ghost-base-disabled);
   --color-button-ghost-text-disabled: var(--theme-button-ghost-text-disabled);
+
+  /* Input Default */
+  --color-input-default-base: var(--theme-input-default-base);
+  --color-input-default-base-hover: var(--theme-input-default-base-hover);
+  --color-input-default-border: var(--theme-input-default-border);
+  --color-input-default-border-hover: var(--theme-input-default-border-hover);
+  --color-input-default-border-error: var(--theme-input-default-border-error);
+  --color-input-default-text: var(--theme-input-default-text);
+  --color-input-default-placeholder: var(--theme-input-default-placeholder);
+  --color-input-default-icon-base: var(--theme-input-default-icon-base);
+  --color-input-ring-active: var(--theme-input-ring-active);
+  --color-input-ring-offset: var(--theme-input-ring-offset);
+  --color-input-default-base-disabled: var(--theme-input-default-base-disabled);
+  --color-input-default-text-disabled: var(--theme-input-default-text-disabled);
+
+  /* Label Primary */
+  --color-label-primary-text: var(--theme-label-primary-text);
+  --color-label-primary-text-disabled: var(--theme-label-primary-text-disabled);
+
+  /* Tip Message Info */
+  --color-tip-message-info-text: var(--theme-tip-message-info-text);
+
+  /* Tip Message Error */
+  --color-tip-message-error-text: var(--theme-tip-message-error-text);
 }
 
 @layer base {
   :root {
     /* Separator */
-    --theme-separator-default-base: var(--color-system-neutral-100);
+    --theme-separator-default-base: var(--color-system-neutral-200);
 
     /* Title */
     --theme-title-default-text: var(--color-system-neutral-950);
@@ -119,6 +143,30 @@
     --theme-button-ghost-ring-offset: var(--color-system-neutral-0);
     --theme-button-ghost-base-disabled: var(--color-system-neutral-100);
     --theme-button-ghost-text-disabled: var(--color-system-neutral-300);
+
+    /* Input Default */
+    --theme-input-default-base: var(--color-system-neutral-0);
+    --theme-input-default-base-hover: var(--color-system-neutral-50);
+    --theme-input-default-border: var(--color-system-neutral-300);
+    --theme-input-default-border-hover: var(--color-system-neutral-300);
+    --theme-input-default-border-error: var(--color-system-red-500);
+    --theme-input-default-text: var(--color-system-neutral-950);
+    --theme-input-default-placeholder: var(--color-system-neutral-500);
+    --theme-input-default-icon-base: var(--color-system-neutral-500);
+    --theme-input-ring-active: var(--color-system-neutral-500);
+    --theme-input-ring-offset: var(--color-system-neutral-0);
+    --theme-input-default-base-disabled: var(--color-system-neutral-50);
+    --theme-input-default-text-disabled: var(--color-system-neutral-300);
+
+    /* Label Primary */
+    --theme-label-primary-text: var(--color-system-neutral-950);
+    --theme-label-primary-text-disabled: var(--color-system-neutral-300);
+
+    /* Tip Message Info */
+    --theme-tip-message-info-text: var(--color-system-neutral-600);
+
+    /* Tip Message Error */
+    --theme-tip-message-error-text: var(--color-system-red-500);
   }
 
   [data-theme='dark'] {
@@ -171,5 +219,29 @@
     --theme-button-ghost-ring-offset: var(--color-system-neutral-950);
     --theme-button-ghost-base-disabled: var(--color-system-neutral-100);
     --theme-button-ghost-text-disabled: var(--color-system-neutral-300);
+
+    /* Input Default */
+    --theme-input-default-base: var(--color-system-neutral-950);
+    --theme-input-default-base-hover: var(--color-system-neutral-800);
+    --theme-input-default-border: var(--color-system-neutral-600);
+    --theme-input-default-border-hover: var(--color-system-neutral-600);
+    --theme-input-default-border-error: var(--color-system-red-500);
+    --theme-input-default-text: var(--color-system-neutral-0);
+    --theme-input-default-placeholder: var(--color-system-neutral-400);
+    --theme-input-default-icon-base: var(--color-system-neutral-400);
+    --theme-input-ring-active: var(--color-system-neutral-600);
+    --theme-input-ring-offset: var(--color-system-neutral-950);
+    --theme-input-default-base-disabled: var(--color-system-neutral-50);
+    --theme-input-default-text-disabled: var(--color-system-neutral-300);
+
+    /* Label Primary */
+    --theme-label-primary-text: var(--color-system-neutral-0);
+    --theme-label-primary-text-disabled: var(--color-system-neutral-300);
+
+    /* Tip Message Info */
+    --theme-tip-message-info-text: var(--color-system-neutral-400);
+
+    /* Tip Message Error */
+    --theme-tip-message-error-text: var(--color-system-red-500);
   }
 }

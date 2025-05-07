@@ -26,7 +26,10 @@
     "./title": "./src/components/title.tsx",
     "./text": "./src/components/text.tsx",
     "./button": "./src/components/button.tsx",
-    "./option-selector": "./src/components/option-selector.tsx"
+    "./option-selector": "./src/components/option-selector.tsx",
+    "./input": "./src/components/input.tsx",
+    "./label": "./src/components/label.tsx",
+    "./tip-message": "./src/components/tip-message.tsx"
   },
   "devDependencies": {
     "@note-taking-app/eslint-config": "workspace:*",

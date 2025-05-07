@@ -1,28 +1,28 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { MoonIcon } from '@note-taking-app/design-system/moon-icon.tsx';
-import { SunIcon } from '@note-taking-app/design-system/sun-icon.tsx';
-import { SystemIcon } from '@note-taking-app/design-system/system-icon.tsx';
 import { OptionSelector } from '@note-taking-app/ui/option-selector';
 import { Button } from '@note-taking-app/ui/button';
 import { useTheme } from 'next-themes';
 
 import { Controller, useForm } from 'react-hook-form';
-import { z } from 'zod';
 
-const colorValidation = z.object({
-  theme: z.enum(['light', 'dark', 'system']),
-});
+import {
+  THEME_OPTIONS,
+  ThemeEnumType,
+} from '@/shared/constants/theme-constants';
 
-type ColorFormType = z.infer<typeof colorValidation>;
+import {
+  ColorFormType,
+  colorValidation,
+} from '@/shared/validations/color-theme-validation';
 
 export function ColorThemeForm() {
   const { theme, setTheme } = useTheme();
 
   const form = useForm<ColorFormType>({
     defaultValues: {
-      theme: theme as ColorFormType['theme'],
+      theme: theme as ThemeEnumType,
     },
     resolver: zodResolver(colorValidation),
   });
@@ -40,29 +40,10 @@ export function ColorThemeForm() {
         name="theme"
         control={form.control}
         render={({ field: { onChange, value } }) => (
-          <OptionSelector<ColorFormType['theme']>
+          <OptionSelector<ThemeEnumType>
             selectedId={value}
             onSelect={(id) => onChange(id)}
-            options={[
-              {
-                id: 'light',
-                name: 'Light Mode',
-                description: 'Pick a clean and classic light theme',
-                icon: <SunIcon className="h-6 w-6" />,
-              },
-              {
-                id: 'dark',
-                name: 'Dark Mode',
-                description: 'Select a sleek and modern dark theme',
-                icon: <MoonIcon className="h-6 w-6" />,
-              },
-              {
-                id: 'system',
-                name: 'System',
-                description: 'Adapts to your device’s theme',
-                icon: <SystemIcon className="h-6 w-6" />,
-              },
-            ]}
+            options={THEME_OPTIONS}
           />
         )}
       />
