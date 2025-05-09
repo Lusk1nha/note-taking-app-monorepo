@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { forwardRef } from 'react';
 
 const inputVariants = cva(
-  'flex rounded-8 focus:outline-0 focus:ring-2 ring-offset-2',
+  'w-full flex rounded-8 focus:outline-0 focus:ring-2 ring-offset-2',
   {
     variants: {
       variant: {

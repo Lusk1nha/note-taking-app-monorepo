@@ -9,6 +9,15 @@
   --color-dashboard-base: var(--theme-dashboard-base);
   --color-border-base: var(--theme-border-base);
 
+  /* Auth Colors */
+  --color-auth-base: var(--theme-auth-base);
+  --color-auth-content-base: var(--theme-auth-content-base);
+  --color-auth-border: var(--theme-auth-border);
+  --color-auth-title: var(--theme-auth-title);
+  --color-auth-text: var(--theme-auth-text);
+  --color-auth-link: var(--theme-auth-link);
+  --color-auth-redirect-link: var(--theme-auth-redirect-link);
+
   /* Mobile Navbar */
   --color-mobile-navbar-base: var(--theme-mobile-navbar-base);
   --color-mobile-navbar-text: var(--theme-mobile-navbar-text);
@@ -54,6 +63,14 @@
     --theme-dashboard-base: var(--color-system-neutral-0);
     --theme-border-base: var(--color-system-neutral-200);
 
+    --theme-auth-base: var(--color-system-neutral-100);
+    --theme-auth-content-base: var(--color-system-neutral-0);
+    --theme-auth-border: var(--color-system-neutral-200);
+    --theme-auth-title: var(--color-system-neutral-950);
+    --theme-auth-text: var(--color-system-neutral-600);
+    --theme-auth-link: var(--color-system-neutral-950);
+    --theme-auth-redirect-link: var(--color-system-neutral-600);
+
     --theme-mobile-navbar-base: var(--color-system-neutral-100);
     --theme-mobile-navbar-text: var(--color-system-neutral-950);
 
@@ -70,9 +87,7 @@
     --theme-mobile-bottom-navigation-text-active: var(--color-system-blue-500);
 
     --theme-setting-navigation-base-active: var(--color-system-neutral-100);
-    --theme-setting-navigation-icon-text-active: var(
-      --color-system-blue-500
-    );
+    --theme-setting-navigation-icon-text-active: var(--color-system-blue-500);
     --theme-setting-navigation-text: var(--color-system-neutral-700);
     --theme-setting-navigation-text-active: var(--color-system-neutral-950);
   }
@@ -80,6 +95,14 @@
   [data-theme='dark'] {
     --theme-dashboard-base: var(--color-system-neutral-950);
     --theme-border-base: var(--color-system-neutral-800);
+
+    --theme-auth-base: var(--color-system-neutral-700);
+    --theme-auth-content-base: var(--color-system-neutral-950);
+    --theme-auth-border: var(--color-system-neutral-800);
+    --theme-auth-title: var(--color-system-neutral-0);
+    --theme-auth-text: var(--color-system-neutral-300);
+    --theme-auth-link: var(--color-system-neutral-0);
+    --theme-auth-redirect-link: var(--color-system-neutral-400);
 
     --theme-mobile-navbar-base: var(--color-system-neutral-800);
     --theme-mobile-navbar-text: var(--color-system-neutral-0);

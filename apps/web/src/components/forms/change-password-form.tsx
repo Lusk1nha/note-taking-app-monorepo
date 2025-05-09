@@ -29,16 +29,22 @@ export function ChangePasswordForm() {
         label="Old Password"
         name="oldPassword"
         control={form.control}
+        field={{
+          type: 'password',
+        }}
         required
       />
 
       <ControlledInput
         label="New Password"
         name="newPassword"
+        control={form.control}
         tip={{
           children: 'At least 8 characters',
         }}
-        control={form.control}
+        field={{
+          type: 'password',
+        }}
         required
       />
 
@@ -46,6 +52,9 @@ export function ChangePasswordForm() {
         label="Confirm New Password"
         name="confirmPassword"
         control={form.control}
+        field={{
+          type: 'password',
+        }}
         required
       />
 

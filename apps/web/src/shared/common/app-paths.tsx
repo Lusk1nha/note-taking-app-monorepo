@@ -12,9 +12,10 @@ import { JSX } from 'react';
 
 export enum AppPaths {
   // Public
-  Login = '/login',
-  Register = '/register',
+  Login = '/sign-in',
+  Register = '/sign-up',
   Logout = '/logout',
+  ForgotPassword = '/forgot-password',
 
   Home = '/',
   Search = '/search',

@@ -28,7 +28,8 @@
     "./font-sans-serif-icon.tsx": "./src/components/font-sans-serif-icon.tsx",
     "./font-serif-icon.tsx": "./src/components/font-serif-icon.tsx",
     "./font-monospace-icon.tsx": "./src/components/font-monospace-icon.tsx",
-    "./info-icon.tsx": "./src/components/info-icon.tsx"
+    "./info-icon.tsx": "./src/components/info-icon.tsx",
+    "./google-icon.tsx": "./src/components/google-icon.tsx"
   },
   "scripts": {
     "build": "tailwindcss -i ./src/styles.css -o ./dist/styles.css",

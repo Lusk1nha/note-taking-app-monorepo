@@ -25,7 +25,7 @@ export default function DashboardLayout({
         <div id="dashboard-children" className="w-full h-full flex flex-col">
           {topNavigations}
 
-          <div className="bg-dashboard-base w-full h-full -mt-1 lg:mt-0 z-10 rounded-12">
+          <div className="bg-dashboard-base w-full h-full -mt-2 lg:mt-0 z-10 rounded-12">
             {children}
           </div>
         </div>

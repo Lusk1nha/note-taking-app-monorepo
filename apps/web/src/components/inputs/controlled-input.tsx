@@ -9,15 +9,20 @@ interface ControlledInputProps<T extends FieldValues> {
   control: Control<T>;
 
   required?: boolean;
+
   label?: string;
+
   field?: InputProps;
   tip?: TipMessageProps;
+
+  actions?: React.ReactNode;
 }
 
 export function ControlledInput<T extends FieldValues>(
   props: Readonly<ControlledInputProps<T>>,
 ) {
-  const { name, control, label, tip, required, field, ...rest } = props;
+  const { name, control, label, tip, required, field, actions, ...rest } =
+    props;
 
   return (
     <Controller
@@ -28,7 +33,14 @@ export function ControlledInput<T extends FieldValues>(
         fieldState: { error },
       }) => (
         <fieldset className="flex flex-col gap-y-075">
-          {label && <Label required={required}>{label}</Label>}
+          {label && (
+            <div className="flex items-center justify-between">
+              {label && <Label required={required}>{label}</Label>}
+              {actions && (
+                <div className="flex items-center gap-x-200">{actions}</div>
+              )}
+            </div>
+          )}
 
           <Input
             {...field}

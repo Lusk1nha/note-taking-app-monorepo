@@ -8,9 +8,11 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          'bg-button-primary-base hover:bg-button-primary-hover text-button-primary-text disabled:bg-button-primary-base-disabled disabled:text-button-primary-text-disabled ring-button-primary-ring-active ring-offset-button-primary-ring-offset',
+          'bg-button-primary-base hover:bg-button-primary-base-hover text-button-primary-text disabled:bg-button-primary-base-disabled disabled:text-button-primary-text-disabled ring-button-primary-ring-active ring-offset-button-primary-ring-offset',
         ghost:
           'bg-button-ghost-base text-button-ghost-text hover:bg-button-ghost-hover disabled:bg-button-ghost-base-disabled disabled:text-button-ghost-text-disabled ring-button-ghost-ring-active ring-offset-button-ghost-ring-offset',
+        outline:
+          'bg-button-outline-base text-button-outline-text hover:bg-button-outline-base-hover hover:text-button-outline-text-hover border border-button-outline-border hover:border-button-outline-border-hover focus:border-button-outline-border-active disabled:bg-button-outline-base-disabled disabled:text-button-outline-text-disabled disabled:border-0 ring-button-outline-ring-active ring-offset-button-outline-ring-offset',
       },
       size: {
         default: 'py-3 px-4 system-preset-4',

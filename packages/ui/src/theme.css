@@ -68,6 +68,25 @@
   --color-button-ghost-base-disabled: var(--theme-button-ghost-base-disabled);
   --color-button-ghost-text-disabled: var(--theme-button-ghost-text-disabled);
 
+  /* Button Outline */
+  --color-button-outline-base: var(--theme-button-outline-base);
+  --color-button-outline-base-hover: var(--theme-button-outline-base-hover);
+  --color-button-outline-text: var(--theme-button-outline-text);
+  --color-button-outline-text-hover: var(--theme-button-outline-text-hover);
+  --color-button-outline-border: var(--theme-button-outline-border);
+  --color-button-outline-border-hover: var(--theme-button-outline-border-hover);
+  --color-button-outline-border-active: var(
+    --theme-button-outline-border-active
+  );
+  --color-button-outline-ring-active: var(--theme-button-outline-ring-active);
+  --color-button-outline-ring-offset: var(--theme-button-outline-ring-offset);
+  --color-button-outline-base-disabled: var(
+    --theme-button-outline-base-disabled
+  );
+  --color-button-outline-text-disabled: var(
+    --theme-button-outline-text-disabled
+  );
+
   /* Input Default */
   --color-input-default-base: var(--theme-input-default-base);
   --color-input-default-base-hover: var(--theme-input-default-base-hover);
@@ -146,6 +165,19 @@
     --theme-button-ghost-base-disabled: var(--color-system-neutral-100);
     --theme-button-ghost-text-disabled: var(--color-system-neutral-300);
 
+    /* Button Outline */
+    --theme-button-outline-base: transparent;
+    --theme-button-outline-base-hover: var(--color-system-neutral-100);
+    --theme-button-outline-text: var(--color-system-neutral-950);
+    --theme-button-outline-text-hover: var(--color-system-neutral-600);
+    --theme-button-outline-border: var(--color-system-neutral-300);
+    --theme-button-outline-border-hover: var(--color-system-neutral-100);
+    --theme-button-outline-border-active: var(--color-system-neutral-950);
+    --theme-button-outline-ring-active: var(--color-system-neutral-400);
+    --theme-button-outline-ring-offset: var(--color-system-neutral-0);
+    --theme-button-outline-base-disabled: var(--color-system-neutral-50);
+    --theme-button-outline-text-disabled: var(--color-system-neutral-300);
+
     /* Input Default */
     --theme-input-default-base: var(--color-system-neutral-0);
     --theme-input-default-base-hover: var(--color-system-neutral-50);
@@ -222,6 +254,19 @@
     --theme-button-ghost-ring-offset: var(--color-system-neutral-950);
     --theme-button-ghost-base-disabled: var(--color-system-neutral-100);
     --theme-button-ghost-text-disabled: var(--color-system-neutral-300);
+
+    /* Button Outline */
+    --theme-button-outline-base: transparent;
+    --theme-button-outline-base-hover: var(--color-system-neutral-800);
+    --theme-button-outline-text: var(--color-system-neutral-0);
+    --theme-button-outline-text-hover: var(--color-system-neutral-0);
+    --theme-button-outline-border: var(--color-system-neutral-600);
+    --theme-button-outline-border-hover: var(--color-system-neutral-600);
+    --theme-button-outline-border-active: var(--color-system-neutral-600);
+    --theme-button-outline-ring-active: var(--color-system-neutral-600);
+    --theme-button-outline-ring-offset: var(--color-system-neutral-950);
+    --theme-button-outline-base-disabled: var(--color-system-neutral-50);
+    --theme-button-outline-text-disabled: var(--color-system-neutral-300);
 
     /* Input Default */
     --theme-input-default-base: var(--color-system-neutral-950);
