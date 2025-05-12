@@ -56,6 +56,14 @@
   --color-setting-navigation-text-active: var(
     --theme-setting-navigation-text-active
   );
+
+  /* Toast Colors */
+  --color-toast-default-base: var(--theme-toast-default-base);
+  --color-toast-default-title: var(--theme-toast-default-title);
+  --color-toast-default-tag: var(--theme-toast-default-tag);
+  --color-toast-default-border: var(--theme-toast-default-border);
+  --color-toast-close-button-text: var(--theme-toast-close-button-text);
+  --color-toast-success-base: var(--theme-toast-success-base);
 }
 
 @layer base {
@@ -90,6 +98,14 @@
     --theme-setting-navigation-icon-text-active: var(--color-system-blue-500);
     --theme-setting-navigation-text: var(--color-system-neutral-700);
     --theme-setting-navigation-text-active: var(--color-system-neutral-950);
+
+    /* Toast Colors */
+    --theme-toast-default-base: var(--color-system-neutral-0);
+    --theme-toast-default-title: var(--color-system-neutral-950);
+    --theme-toast-default-tag: var(--color-system-neutral-950);
+    --theme-toast-default-border: var(--color-system-neutral-200);
+    --theme-toast-close-button-text: var(--color-system-neutral-400);
+    --theme-toast-success-base: var(--color-system-green-500);
   }
 
   [data-theme='dark'] {
@@ -124,5 +140,13 @@
     --theme-setting-navigation-icon-text-active: var(--color-system-blue-500);
     --theme-setting-navigation-text: var(--color-system-neutral-0);
     --theme-setting-navigation-text-active: var(--color-system-neutral-0);
+
+    /* Toast Colors */
+    --theme-toast-default-base: var(--color-system-neutral-800);
+    --theme-toast-default-title: var(--color-system-neutral-0);
+    --theme-toast-default-tag: var(--color-system-neutral-0);
+    --theme-toast-default-border: var(--color-system-neutral-700);
+    --theme-toast-close-button-text: var(--color-system-neutral-400);
+    --theme-toast-success-base: var(--color-system-green-500);
   }
 }
