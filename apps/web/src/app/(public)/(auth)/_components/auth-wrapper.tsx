@@ -16,7 +16,7 @@ export function AuthWrapper(props: Readonly<AuthWrapperProps>) {
         className,
       )}
     >
-      <div className="w-full h-full flex flex-col px-200 py-600 gap-y-200">
+      <div className="w-full h-full flex flex-col px-200 sm:px-400 lg:px-600 py-600 gap-y-200">
         <header className="flex items-center justify-center">
           <LogoIcon />
         </header>

@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 import { CredentialsSignUpForm } from '@/components/forms/credentials-signup-form';
 import { AuthHeader } from '../../_components/auth-header';
 import { AuthWrapper } from '../../_components/auth-wrapper';
