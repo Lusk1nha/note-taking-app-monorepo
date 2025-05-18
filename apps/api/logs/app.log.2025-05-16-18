@@ -1,0 +1,24 @@
+2025-05-16T18:08:49.199835Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-16T18:08:49.2004098Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-16T18:08:49.2016614Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-16T18:08:49.2663391Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-16T18:08:49.2704125Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-16T18:08:49.2728538Z  INFO ThreadId(01) api::database: Database migrations completed successfully
+2025-05-16T18:08:49.2729918Z  INFO ThreadId(01) api::app_state: Setting up application state
+2025-05-16T18:08:49.2731325Z  INFO ThreadId(01) api::router: Configuring API routes
+2025-05-16T18:08:49.2734151Z  INFO ThreadId(01) api::router: Building v1 routes under /api/v1
+2025-05-16T18:08:49.2740653Z  INFO ThreadId(16) api::server: Server started on the address: 127.0.0.1:8000
+2025-05-16T18:41:25.7098377Z  WARN ThreadId(01) api: Received SIGINT signal, initiating graceful shutdown
+2025-05-16T18:41:25.710484Z  INFO ThreadId(01) api::database: Closing database connection pool
+2025-05-16T18:41:25.7105578Z  INFO ThreadId(17) api::server: Shutdown signal received, stopping server gracefully...
+2025-05-16T18:41:25.7106295Z  INFO ThreadId(01) api: Database connection pool closed
+2025-05-16T18:41:43.5645613Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-16T18:41:43.5651468Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-16T18:41:43.5663641Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-16T18:41:43.6286113Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-16T18:41:43.6326474Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-16T18:41:43.6346988Z  INFO ThreadId(01) api::database: Database migrations completed successfully
+2025-05-16T18:41:43.6348124Z  INFO ThreadId(01) api::app_state: Setting up application state
+2025-05-16T18:41:43.6349148Z  INFO ThreadId(01) api::router: Configuring API routes
+2025-05-16T18:41:43.6351604Z  INFO ThreadId(01) api::router: Building v1 routes under /api/v1
+2025-05-16T18:41:43.6357794Z  INFO ThreadId(17) api::server: Server started on the address: 127.0.0.1:8000

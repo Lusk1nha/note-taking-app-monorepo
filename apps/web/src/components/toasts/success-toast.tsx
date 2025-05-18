@@ -15,7 +15,10 @@ interface SuccessToastProps {
 export function SuccessToast(props: Readonly<SuccessToastProps>) {
   const { id, title, children, tag } = props;
 
-  const dismissToast = useCallback(() => toast.dismiss(id), [id]);
+  const dismissToast = useCallback(
+    () => toast.dismiss(id),
+    [id, toast.dismiss],
+  );
 
   return (
     <div className="min-h-8 sm:min-w-[390px] bg-toast-default-base border border-toast-default-border rounded-8 py-075 gap-y-100 flex flex-col items-center shadow shadow-dashboard-base">

@@ -1,0 +1,67 @@
+2025-05-14T16:00:32.2581469Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-14T16:00:32.2587033Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-14T16:00:32.2598817Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-14T16:00:32.3221627Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-14T16:00:32.4192787Z  INFO ThreadId(01) api::database: Database migrations completed successfully
+2025-05-14T16:01:52.9929715Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-14T16:01:52.9934634Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-14T16:01:52.9946125Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-14T16:01:53.0568437Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-14T16:01:53.0599444Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-14T16:01:53.075926Z  INFO ThreadId(01) api::database: Database migrations completed successfully
+2025-05-14T16:07:37.5440121Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-14T16:07:37.5446088Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-14T16:07:37.5457873Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-14T16:07:37.6078999Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-14T16:07:37.6216938Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-14T16:07:37.6495401Z  INFO ThreadId(01) api::database: Database migrations completed successfully
+2025-05-14T16:12:05.6787754Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-14T16:12:05.6792776Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-14T16:12:05.6804346Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-14T16:12:05.7423113Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-14T16:12:05.746638Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-14T16:12:05.9037775Z  INFO ThreadId(01) api::database: Database migrations completed successfully
+2025-05-14T16:14:44.3123772Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-14T16:14:44.3128274Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-14T16:14:44.3141703Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-14T16:14:44.376375Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-14T16:14:44.3898131Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-14T16:14:44.4023532Z  INFO ThreadId(01) api::database: Database migrations completed successfully
+2025-05-14T16:15:29.8033059Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-14T16:15:29.8038573Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-14T16:15:29.8049984Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-14T16:15:29.8664319Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-14T16:15:29.8700782Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-14T16:15:29.8718369Z  INFO ThreadId(01) sqlx::postgres::notice: relação "credentials" já existe, ignorando
+2025-05-14T16:15:49.7687621Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-14T16:15:49.7693249Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-14T16:15:49.770607Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-14T16:15:49.8330553Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-14T16:15:49.8578563Z  INFO ThreadId(01) sqlx::postgres::notice: relação "users" já existe, ignorando
+2025-05-14T16:17:11.2354544Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-14T16:17:11.2359865Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-14T16:17:11.237272Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-14T16:17:11.4039318Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-14T16:17:11.4156236Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-14T16:17:11.4174211Z  INFO ThreadId(01) sqlx::postgres::notice: relação "users" já existe, ignorando
+2025-05-14T16:17:11.4263622Z  INFO ThreadId(01) sqlx::postgres::notice: relação "credentials" já existe, ignorando
+2025-05-14T16:17:58.2325676Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-14T16:17:58.2330379Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-14T16:17:58.234137Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-14T16:17:58.2971521Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-14T16:17:58.3093892Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-14T16:17:58.3112248Z  INFO ThreadId(01) sqlx::postgres::notice: relação "credentials" já existe, ignorando
+2025-05-14T16:17:58.3275158Z  INFO ThreadId(01) api::database: Database migrations completed successfully
+2025-05-14T16:18:13.8154609Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-14T16:18:13.8160185Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-14T16:18:13.8172144Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-14T16:18:13.879445Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-14T16:18:13.8830737Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-14T16:18:13.9138198Z  INFO ThreadId(01) api::database: Database migrations completed successfully
+2025-05-14T16:38:26.0794822Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-14T16:38:26.0800487Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-14T16:38:26.0812726Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-14T16:38:26.8179507Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-14T16:38:26.8222768Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-14T16:38:26.8242137Z  INFO ThreadId(01) api::database: Database migrations completed successfully
+2025-05-14T16:38:26.8243024Z  INFO ThreadId(01) api::app_state: Setting up application state
