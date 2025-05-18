@@ -1,3 +1,5 @@
+use sqlx::{Postgres, Transaction};
+
 use crate::{
     domain::user::{
         user_errors::UserServiceError,
@@ -21,7 +23,11 @@ impl<R: UserRepository> UserService<R> {
         self.repository.get_by_id(id).await.map_err(Into::into)
     }
 
-    pub async fn create_user(&self, payload: CreateUserDto) -> Result<User, UserServiceError> {
+    pub async fn create_user(
+        &self,
+        executor: &mut Transaction<'_, Postgres>,
+        payload: CreateUserDto,
+    ) -> Result<User, UserServiceError> {
         payload.validate()?;
 
         let user = CreateUser {
@@ -30,6 +36,9 @@ impl<R: UserRepository> UserService<R> {
             image: payload.image,
         };
 
-        self.repository.create(user).await.map_err(Into::into)
+        self.repository
+            .create(executor, user)
+            .await
+            .map_err(Into::into)
     }
 }

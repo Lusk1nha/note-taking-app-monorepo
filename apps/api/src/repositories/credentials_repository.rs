@@ -1,4 +1,5 @@
 use async_trait::async_trait;
+use sqlx::{Postgres, Transaction};
 
 use std::sync::Arc;
 use tokio::sync::Mutex;
@@ -12,7 +13,11 @@ use crate::{
 #[async_trait]
 pub trait CredentialsRepository: Send + Sync {
     async fn get_by_email(&self, email: &str) -> Result<Option<Credentials>, RepositoryError>;
-    async fn create(&self, payload: CreateCredentials) -> Result<Credentials, RepositoryError>;
+    async fn create(
+        &self,
+        executor: &mut Transaction<'_, Postgres>,
+        payload: CreateCredentials,
+    ) -> Result<Credentials, RepositoryError>;
 }
 
 #[derive(Debug, Clone)]
@@ -29,7 +34,8 @@ impl PostgresCredentialsRepository {
 #[async_trait]
 impl CredentialsRepository for PostgresCredentialsRepository {
     async fn get_by_email(&self, email: &str) -> Result<Option<Credentials>, RepositoryError> {
-        let mut conn: sqlx::pool::PoolConnection<sqlx::Postgres> = self.pool.lock().await.acquire().await?;
+        let mut conn: sqlx::pool::PoolConnection<sqlx::Postgres> =
+            self.pool.lock().await.acquire().await?;
 
         sqlx::query_as!(
             Credentials,
@@ -43,9 +49,11 @@ impl CredentialsRepository for PostgresCredentialsRepository {
         .map_err(|e| RepositoryError::QueryError(e.into()))
     }
 
-    async fn create(&self, _payload: CreateCredentials) -> Result<Credentials, RepositoryError> {
-        let mut conn = self.pool.lock().await.acquire().await?;
-
+    async fn create(
+        &self,
+        executor: &mut Transaction<'_, Postgres>,
+        payload: CreateCredentials,
+    ) -> Result<Credentials, RepositoryError> {
         sqlx::query_as!(
             Credentials,
             r#"
@@ -53,11 +61,11 @@ impl CredentialsRepository for PostgresCredentialsRepository {
             VALUES ($1, $2, $3)
             RETURNING *
             "#,
-            _payload.id,
-            _payload.email,
-            _payload.password_hash
+            payload.id,
+            payload.email,
+            payload.password_hash
         )
-        .fetch_one(&mut *conn)
+        .fetch_one(&mut **executor)
         .await
         .map_err(|e| RepositoryError::QueryError(e.into()))
     }

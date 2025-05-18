@@ -31,7 +31,7 @@ impl AuthController {
     ) -> Result<impl IntoResponse, ErrorResponse> {
         Self::check_user_exists(&services, &payload.email).await?;
 
-        let (user, _credentials) = services
+        let (user, _credentials, _auth_provider) = services
             .auth_service
             .register(payload)
             .await

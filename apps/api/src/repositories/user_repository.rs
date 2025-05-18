@@ -1,4 +1,5 @@
 use async_trait::async_trait;
+use sqlx::{Postgres, Transaction};
 
 use std::sync::Arc;
 use tokio::sync::Mutex;
@@ -12,7 +13,11 @@ use crate::{
 #[async_trait]
 pub trait UserRepository: Send + Sync {
     async fn get_by_id(&self, id: &str) -> Result<Option<User>, RepositoryError>;
-    async fn create(&self, payload: CreateUser) -> Result<User, RepositoryError>;
+    async fn create(
+        &self,
+        executor: &mut Transaction<'_, Postgres>,
+        payload: CreateUser,
+    ) -> Result<User, RepositoryError>;
 }
 
 #[derive(Debug, Clone)]
@@ -43,9 +48,11 @@ impl UserRepository for PostgresUserRepository {
         .map_err(|e| RepositoryError::QueryError(e.into()))
     }
 
-    async fn create(&self, payload: CreateUser) -> Result<User, RepositoryError> {
-        let mut conn = self.pool.lock().await.acquire().await?;
-
+    async fn create(
+        &self,
+        executor: &mut Transaction<'_, Postgres>,
+        payload: CreateUser,
+    ) -> Result<User, RepositoryError> {
         sqlx::query_as!(
             User,
             r#"
@@ -57,7 +64,7 @@ impl UserRepository for PostgresUserRepository {
             payload.name,
             payload.image
         )
-        .fetch_one(&mut *conn)
+        .fetch_one(&mut **executor)
         .await
         .map_err(|e| RepositoryError::QueryError(e.into()))
     }

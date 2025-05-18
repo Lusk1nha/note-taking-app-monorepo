@@ -7,6 +7,7 @@ use crate::{
 };
 
 use bcrypt::{DEFAULT_COST, hash, verify};
+use sqlx::{Postgres, Transaction};
 
 #[derive(Clone)]
 pub struct CredentialsService<R: CredentialsRepository> {
@@ -30,6 +31,7 @@ impl<R: CredentialsRepository> CredentialsService<R> {
 
     pub async fn create_credentials(
         &self,
+        executor: &mut Transaction<'_, Postgres>,
         payload: CreateCredentialsDto,
     ) -> Result<Credentials, CredentialsServiceError> {
         payload.validate()?;
@@ -45,7 +47,7 @@ impl<R: CredentialsRepository> CredentialsService<R> {
         };
 
         self.repository
-            .create(credentials)
+            .create(executor, credentials)
             .await
             .map_err(Into::into)
     }
