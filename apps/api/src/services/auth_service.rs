@@ -10,10 +10,8 @@ use crate::{
             auth_dto::{LoginWithCredentialsRequest, RegisterWithCredentialsRequest},
             auth_errors::AuthError,
         },
-        auth_provider::auth_provider_model::{
-            AuthProvider as AuthProviderModel, AuthProviderType, CreateAuthProviderDto,
-        },
-        credentials::credentials_model::{CreateCredentialsDto, Credentials},
+        auth_provider::auth_provider_model::{AuthProviderType, CreateAuthProviderDto},
+        credentials::credentials_model::CreateCredentialsDto,
         user::user_model::{CreateUserDto, User},
     },
     repositories::{
@@ -23,16 +21,15 @@ use crate::{
 };
 
 use super::{
-    auth_provider_service::AuthProviderService, credentials_service::CredentialsService,
+    auth_provider_service::AuthProviderService,
+    credentials_service::CredentialsService,
+    jwt_service::{JwtService, JwtServiceTrait},
     user_service::UserService,
 };
 
 #[async_trait]
 pub trait AuthProvider: Send + Sync {
-    async fn register(
-        &self,
-        data: RegisterWithCredentialsRequest,
-    ) -> Result<(User, Credentials, AuthProviderModel), AuthError>;
+    async fn register(&self, data: RegisterWithCredentialsRequest) -> Result<User, AuthError>;
     async fn login(&self, credentials: LoginWithCredentialsRequest) -> Result<String, AuthError>;
     async fn logout(&self, token: &str) -> Result<(), AuthError>;
 }
@@ -47,6 +44,7 @@ where
     user_service: Arc<UserService<U>>,
     credentials_service: Arc<CredentialsService<C>>,
     auth_provider_service: Arc<AuthProviderService<A>>,
+    jwt_service: Arc<JwtService>,
 }
 
 impl<U, C, A> AuthService<U, C, A>
@@ -60,12 +58,14 @@ where
         user_service: Arc<UserService<U>>,
         credentials_service: Arc<CredentialsService<C>>,
         auth_provider_service: Arc<AuthProviderService<A>>,
+        jwt_service: Arc<JwtService>,
     ) -> Self {
         Self {
             pool,
             user_service,
             credentials_service,
             auth_provider_service,
+            jwt_service,
         }
     }
 }
@@ -77,11 +77,14 @@ where
     C: CredentialsRepository + Send + Sync,
     A: AuthProviderRepository + Send + Sync,
 {
-    async fn register(
-        &self,
-        data: RegisterWithCredentialsRequest,
-    ) -> Result<(User, Credentials, AuthProviderModel), AuthError> {
-        let mut tx = self.pool.lock().await.begin().await?;
+    async fn register(&self, data: RegisterWithCredentialsRequest) -> Result<User, AuthError> {
+        let pool = self.pool.lock().await;
+        let mut tx = pool.begin().await?;
+
+        match self.credentials_service.get_by_email(&data.email).await? {
+            Some(_) => return Err(AuthError::UserAlreadyExists),
+            None => {}
+        };
 
         let user = self
             .user_service
@@ -94,8 +97,7 @@ where
             )
             .await?;
 
-        let credentials = self
-            .credentials_service
+        self.credentials_service
             .create_credentials(
                 &mut tx,
                 CreateCredentialsDto {
@@ -106,8 +108,7 @@ where
             )
             .await?;
 
-        let auth_provider = self
-            .auth_provider_service
+        self.auth_provider_service
             .create_auth_provider(
                 &mut tx,
                 CreateAuthProviderDto {
@@ -119,11 +120,28 @@ where
 
         tx.commit().await?;
 
-        Ok((user, credentials, auth_provider))
+        Ok(user)
     }
 
-    async fn login(&self, credentials: LoginWithCredentialsRequest) -> Result<String, AuthError> {
-        todo!("Implementação do método login será adicionada aqui");
+    async fn login(&self, data: LoginWithCredentialsRequest) -> Result<String, AuthError> {
+        let credentials = self
+            .credentials_service
+            .get_by_email(&data.email)
+            .await?
+            .ok_or(AuthError::InvalidCredentials)?;
+
+        let is_valid = self
+            .credentials_service
+            .verify_hash_password(&data.password, &credentials.password_hash)
+            .map_err(|_| AuthError::InvalidCredentials)?;
+
+        if !is_valid {
+            return Err(AuthError::InvalidCredentials);
+        }
+
+        self.jwt_service
+            .generate_token(&credentials.id)
+            .map_err(AuthError::JwtCreationError)
     }
 
     async fn logout(&self, _token: &str) -> Result<(), AuthError> {

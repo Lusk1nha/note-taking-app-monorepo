@@ -1,0 +1,38 @@
+2025-05-19T05:15:10.3393618Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-19T05:15:10.340001Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-19T05:15:10.3412803Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-19T05:15:10.4027916Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-19T05:15:10.4552582Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-19T05:15:10.4603384Z  INFO ThreadId(01) api::database: Database migrations completed successfully
+2025-05-19T05:15:10.4604777Z  INFO ThreadId(01) api::app_state: Setting up application state
+2025-05-19T05:15:10.4606418Z  INFO ThreadId(01) api::router: Configuring API routes
+2025-05-19T05:15:10.4609987Z  INFO ThreadId(01) api::router: Building v1 routes under /api/v1
+2025-05-19T05:15:10.4617178Z  INFO ThreadId(02) api::server: Server started on the address: 127.0.0.1:8000
+2025-05-19T05:21:38.3180126Z  WARN ThreadId(01) api: Received SIGINT signal, initiating graceful shutdown
+2025-05-19T05:21:38.3186361Z  INFO ThreadId(01) api::database: Closing database connection pool
+2025-05-19T05:21:38.3187202Z  INFO ThreadId(02) api::server: Shutdown signal received, stopping server gracefully...
+2025-05-19T05:21:38.3188905Z  INFO ThreadId(01) api: Database connection pool closed
+2025-05-19T05:21:43.5677952Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-19T05:21:43.568648Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-19T05:21:43.5699657Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-19T05:21:43.632Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-19T05:21:43.635969Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-19T05:21:43.6379628Z  INFO ThreadId(01) api::database: Database migrations completed successfully
+2025-05-19T05:21:43.6380795Z  INFO ThreadId(01) api::app_state: Setting up application state
+2025-05-19T05:21:43.6381888Z  INFO ThreadId(01) api::router: Configuring API routes
+2025-05-19T05:21:43.6385925Z  INFO ThreadId(01) api::router: Building v1 routes under /api/v1
+2025-05-19T05:21:43.6393525Z  INFO ThreadId(17) api::server: Server started on the address: 127.0.0.1:8000
+2025-05-19T05:54:37.8121732Z  WARN ThreadId(01) api: Received SIGINT signal, initiating graceful shutdown
+2025-05-19T05:54:37.8127392Z  INFO ThreadId(01) api::database: Closing database connection pool
+2025-05-19T05:54:37.8128291Z  INFO ThreadId(16) api::server: Shutdown signal received, stopping server gracefully...
+2025-05-19T05:54:37.8130433Z  INFO ThreadId(01) api: Database connection pool closed
+2025-05-19T05:54:43.8638887Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-19T05:54:43.8645776Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-19T05:54:43.8659315Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-19T05:54:43.9263623Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-19T05:54:43.9303696Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-19T05:54:43.9323188Z  INFO ThreadId(01) api::database: Database migrations completed successfully
+2025-05-19T05:54:43.9324326Z  INFO ThreadId(01) api::app_state: Setting up application state
+2025-05-19T05:54:43.9325225Z  INFO ThreadId(01) api::router: Configuring API routes
+2025-05-19T05:54:43.9329059Z  INFO ThreadId(01) api::router: Building v1 routes under /api/v1
+2025-05-19T05:54:43.933668Z  INFO ThreadId(02) api::server: Server started on the address: 127.0.0.1:8000

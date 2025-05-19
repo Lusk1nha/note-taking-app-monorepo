@@ -4,6 +4,7 @@ pub mod common;
 pub mod controllers;
 pub mod database;
 pub mod domain;
+pub mod entities;
 pub mod environment;
 pub mod errors;
 pub mod helpers;

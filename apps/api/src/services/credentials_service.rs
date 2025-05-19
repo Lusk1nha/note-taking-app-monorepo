@@ -19,7 +19,7 @@ impl<R: CredentialsRepository> CredentialsService<R> {
         Self { repository }
     }
 
-    pub async fn get_credentials_by_email(
+    pub async fn get_by_email(
         &self,
         email: &str,
     ) -> Result<Option<Credentials>, CredentialsServiceError> {

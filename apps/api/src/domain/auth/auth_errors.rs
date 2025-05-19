@@ -11,7 +11,7 @@ pub enum AuthError {
     InvalidCredentials,
 
     #[error("User already exists")]
-    UserExists,
+    UserAlreadyExists,
 
     #[error("Password complexity requirements not met")]
     WeakPassword,
@@ -27,4 +27,7 @@ pub enum AuthError {
 
     #[error("Error creating auth provider: {0}")]
     AuthProviderCreationError(#[from] AuthProviderServiceError),
+
+    #[error("Error creating JWT token: {0}")]
+    JwtCreationError(#[from] jsonwebtoken::errors::Error),
 }
