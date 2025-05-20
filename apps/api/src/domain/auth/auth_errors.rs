@@ -1,6 +1,7 @@
 use thiserror::Error;
 
 use crate::domain::{
+    admin::admin_errors::AdminServiceError,
     auth_provider::auth_provider_errors::AuthProviderServiceError,
     credentials::credentials_errors::CredentialsServiceError, user::user_errors::UserServiceError,
 };
@@ -16,6 +17,9 @@ pub enum AuthError {
     #[error("Password complexity requirements not met")]
     WeakPassword,
 
+    #[error("Invalid token")]
+    InvalidToken,
+
     #[error("Error to transaction: {0}")]
     TransactionError(#[from] sqlx::Error),
 
@@ -30,4 +34,7 @@ pub enum AuthError {
 
     #[error("Error creating JWT token: {0}")]
     JwtCreationError(#[from] jsonwebtoken::errors::Error),
+
+    #[error("Error getting admin role: {0}")]
+    GetAdminRoleError(#[from] AdminServiceError),
 }

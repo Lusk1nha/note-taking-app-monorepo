@@ -12,7 +12,7 @@ use crate::{
         user::user_dto::UserDtoResponse,
     },
     errors::request_response_errors::internal_server_error,
-    services::{auth_service::AuthProvider, service_register::ServiceRegister},
+    services::{auth_service::AuthServiceTrait, service_register::ServiceRegister},
 };
 
 pub struct AuthController;

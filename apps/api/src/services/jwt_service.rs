@@ -8,9 +8,11 @@ pub trait JwtServiceTrait {
     fn decode_token(&self, token: &str) -> Result<Claims, jsonwebtoken::errors::Error>;
 }
 
+#[derive(Clone)]
 pub struct JwtService {
     secret: String,
 }
+
 
 impl JwtService {
     pub fn new(secret: String) -> Self {

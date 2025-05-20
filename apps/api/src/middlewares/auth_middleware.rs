@@ -1,122 +1,104 @@
-use std::sync::Arc;
+use std::{collections::HashSet, sync::Arc};
 
 use axum::{
     body::Body,
-    extract::{Request, State},
+    extract::Request,
     http::{HeaderMap, header::AUTHORIZATION},
     middleware::Next,
     response::IntoResponse,
 };
-use tracing::debug;
 use uuid::Uuid;
 
 use crate::{
     common::{error_response::ErrorResponse, roles::Role},
-    errors::request_response_errors::{internal_server_error, unauthorized_error},
-    services::{jwt_service::JwtServiceTrait, service_register::ServiceRegister},
+    errors::request_response_errors::{forbidden_error, unauthorized_error},
+    services::{
+        jwt_service::JwtServiceTrait,
+        roles_service::{RoleChecker, UserRoleChecker},
+        service_register::ServiceRegister,
+    },
 };
 
-pub async fn auth_middleware(
-    State(services): State<Arc<ServiceRegister>>,
-    req: Request<Body>,
-    next: Next,
-) -> Result<impl IntoResponse, ErrorResponse> {
-    let req = authenticate_user(&services, req).await?;
-    let req = authorize_user(&services, req).await?;
-
-    Ok(next.run(req).await)
+#[derive(Clone)]
+pub struct AuthMiddleware {
+    jwt_decoder: Arc<dyn JwtServiceTrait + Send + Sync>,
+    role_checker: Arc<dyn RoleChecker + Send + Sync>,
 }
 
-async fn authenticate_user(
-    services: &Arc<ServiceRegister>,
-    mut req: Request<Body>,
-) -> Result<Request<Body>, ErrorResponse> {
-    let headers = req.headers();
+impl AuthMiddleware {
+    pub fn new(
+        jwt_decoder: Arc<dyn JwtServiceTrait + Send + Sync>,
+        role_checker: Arc<dyn RoleChecker + Send + Sync>,
+    ) -> Self {
+        Self {
+            jwt_decoder,
+            role_checker,
+        }
+    }
 
-    let token = extract_bearer_token(headers).ok_or_else(|| {
-        debug!("Missing or invalid Authorization header format");
-        unauthorized_error("Missing or invalid authentication token")
-    })?;
+    pub async fn handle(
+        self,
+        mut req: Request<Body>,
+        next: Next,
+    ) -> Result<impl IntoResponse, ErrorResponse> {
+        let headers = req.headers().clone();
+        let token = Self::extract_token(&headers);
 
-    let claims = services.jwt_service.decode_token(&token).map_err(|e| {
-        debug!("JWT decoding failed: {:?}", e);
-        unauthorized_error("Invalid authentication token")
-    })?;
+        let user_id = self.authenticate(token).await?;
+        let roles = self.authorize(user_id).await?;
 
-    let user_id = Uuid::parse_str(&claims.sub).map_err(|e| {
-        debug!("Invalid UUID in JWT subject: {:?}", e);
-        unauthorized_error("Invalid authentication token")
-    })?;
+        println!("User ID: {}", user_id);
+        println!("Roles: {:?}", roles);
 
-    req.extensions_mut().insert(claims);
-    req.extensions_mut().insert(user_id);
+        req.extensions_mut().insert(user_id);
+        req.extensions_mut().insert(roles);
 
-    Ok(req)
+        Ok(next.run(req).await)
+    }
+
+    fn extract_token(headers: &HeaderMap) -> Option<String> {
+        headers
+            .get(AUTHORIZATION)
+            .and_then(|value| value.to_str().ok())
+            .and_then(|s| s.strip_prefix("Bearer "))
+            .map(|s| s.trim().to_string())
+    }
+
+    async fn authenticate(&self, token: Option<String>) -> Result<Uuid, ErrorResponse> {
+        let token = token.ok_or_else(|| unauthorized_error("Token must be provided"))?;
+
+        let claims = self
+            .jwt_decoder
+            .decode_token(&token)
+            .map_err(|e| unauthorized_error(format!("Invalid token: {}", e)))?;
+
+        Uuid::parse_str(&claims.sub)
+            .map_err(|e| unauthorized_error(format!("User id is invalid: {}", e)))
+    }
+
+    async fn authorize(&self, user_id: Uuid) -> Result<HashSet<Role>, ErrorResponse> {
+        let roles = self
+            .role_checker
+            .get_roles(user_id)
+            .await
+            .into_iter()
+            .flat_map(|roles| roles.into_iter())
+            .collect::<HashSet<_>>();
+
+        if roles.is_empty() {
+            Err(forbidden_error("User does not have any roles"))
+        } else {
+            Ok(roles)
+        }
+    }
 }
 
-async fn authorize_user(
-    services: &Arc<ServiceRegister>,
-    mut req: Request<Body>,
-) -> Result<Request<Body>, ErrorResponse> {
-    let user_id = req.extensions().get::<Uuid>().ok_or_else(|| {
-        debug!("User ID not found in request extensions");
-        unauthorized_error("User ID not found")
-    })?;
-
-    let mut roles: Vec<Role> = Vec::new();
-
-    let user = services
-        .user_service
-        .get_user_by_id(user_id)
-        .await
-        .map_err(|e| {
-            debug!("Failed to get user by ID: {:?}", e);
-            internal_server_error("Failed to retrieve user information") // Mensagem mais precisa
-        })?;
-
-    if user.is_some() {
-        roles.push(Role::User);
-    }
-
-    let admin = services
-        .admin_service
-        .get_admin_by_id(user_id)
-        .await
-        .map_err(|e| {
-            debug!("Failed to get admin by ID: {:?}", e);
-            internal_server_error("Admin not found")
-        })?;
-
-    if admin.is_some() {
-        roles.push(Role::Admin);
-    }
-
-    if roles.is_empty() {
-        debug!("User does not have any roles");
-        return Err(unauthorized_error(
-            "User does not have any roles or is deleted",
-        ));
-    }
-
-    req.extensions_mut().insert(roles);
-
-    Ok(req)
-}
-
-/// Extract the bearer token from the headers
-///
-/// - The token is expected to be a Bearer token
-/// - Returns None if the header is missing, malformed, or not a Bearer token
-fn extract_bearer_token(headers: &HeaderMap) -> Option<String> {
-    headers.get(AUTHORIZATION).and_then(|value| {
-        value.to_str().ok().and_then(|s| {
-            let mut parts = s.splitn(2, ' ');
-            match (parts.next(), parts.next()) {
-                (Some(scheme), Some(token)) if scheme.eq_ignore_ascii_case("Bearer") => {
-                    Some(token.trim().to_string())
-                }
-                _ => None,
-            }
-        })
-    })
+pub fn create_default_auth_middleware(services: Arc<ServiceRegister>) -> AuthMiddleware {
+    AuthMiddleware::new(
+        services.jwt_service.clone(),
+        Arc::new(UserRoleChecker::new(
+            services.user_service.clone(),
+            services.admin_service.clone(),
+        )),
+    )
 }

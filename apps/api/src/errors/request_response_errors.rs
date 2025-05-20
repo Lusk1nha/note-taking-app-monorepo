@@ -20,3 +20,7 @@ pub fn unauthorized_error(message: impl Into<String>) -> ErrorResponse {
 pub fn not_found_error(message: impl Into<String>) -> ErrorResponse {
     ErrorResponse::new(message.into(), StatusCode::NOT_FOUND)
 }
+
+pub fn forbidden_error(message: impl Into<String>) -> ErrorResponse {
+    ErrorResponse::new(message.into(), StatusCode::FORBIDDEN)
+}

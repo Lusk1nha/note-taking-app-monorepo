@@ -15,4 +15,7 @@ pub enum CredentialsServiceError {
 
     #[error("Error in the transaction: {0}")]
     TransactionError(String),
+
+    #[error("Invalid credentials")]
+    InvalidCredentials,
 }

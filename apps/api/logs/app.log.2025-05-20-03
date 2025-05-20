@@ -98,3 +98,43 @@
 2025-05-20T03:11:34.5232301Z  INFO ThreadId(01) api::router: Configuring API routes
 2025-05-20T03:11:34.5236841Z  INFO ThreadId(01) api::router: Building v1 routes under /api/v1
 2025-05-20T03:11:34.5246311Z  INFO ThreadId(17) api::server: Server started on the address: 127.0.0.1:8000
+2025-05-20T03:14:30.9117885Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-20T03:14:30.9124293Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-20T03:14:30.9136825Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-20T03:14:31.0818556Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-20T03:14:31.0858053Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-20T03:14:31.087795Z  INFO ThreadId(01) api::database: Database migrations completed successfully
+2025-05-20T03:14:31.0879391Z  INFO ThreadId(01) api::app_state: Setting up application state
+2025-05-20T03:14:31.0881109Z  INFO ThreadId(01) api::router: Configuring API routes
+2025-05-20T03:14:31.0884253Z  INFO ThreadId(01) api::router: Building v1 routes under /api/v1
+2025-05-20T03:14:31.0892604Z  INFO ThreadId(02) api::server: Server started on the address: 127.0.0.1:8000
+2025-05-20T03:14:37.6129311Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-20T03:14:37.6134647Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-20T03:14:37.6146315Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-20T03:14:37.6781294Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-20T03:14:37.6821383Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-20T03:14:37.6841547Z  INFO ThreadId(01) api::database: Database migrations completed successfully
+2025-05-20T03:14:37.6843074Z  INFO ThreadId(01) api::app_state: Setting up application state
+2025-05-20T03:14:37.6844288Z  INFO ThreadId(01) api::router: Configuring API routes
+2025-05-20T03:14:37.6847698Z  INFO ThreadId(01) api::router: Building v1 routes under /api/v1
+2025-05-20T03:14:37.6856907Z  INFO ThreadId(09) api::server: Server started on the address: 127.0.0.1:8000
+2025-05-20T03:14:39.9438516Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-20T03:14:39.9443876Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-20T03:14:39.9455631Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-20T03:14:40.0074071Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-20T03:14:40.0110999Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-20T03:14:40.0130203Z  INFO ThreadId(01) api::database: Database migrations completed successfully
+2025-05-20T03:14:40.0131466Z  INFO ThreadId(01) api::app_state: Setting up application state
+2025-05-20T03:14:40.0132547Z  INFO ThreadId(01) api::router: Configuring API routes
+2025-05-20T03:14:40.0135473Z  INFO ThreadId(01) api::router: Building v1 routes under /api/v1
+2025-05-20T03:14:40.0144026Z  INFO ThreadId(09) api::server: Server started on the address: 127.0.0.1:8000
+2025-05-20T03:14:49.9987738Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-20T03:14:49.9993013Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-20T03:14:50.0005458Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-20T03:14:50.0625475Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-20T03:14:50.0663626Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-20T03:14:50.0683456Z  INFO ThreadId(01) api::database: Database migrations completed successfully
+2025-05-20T03:14:50.0684875Z  INFO ThreadId(01) api::app_state: Setting up application state
+2025-05-20T03:14:50.0686016Z  INFO ThreadId(01) api::router: Configuring API routes
+2025-05-20T03:14:50.0688966Z  INFO ThreadId(01) api::router: Building v1 routes under /api/v1
+2025-05-20T03:14:50.0697466Z  INFO ThreadId(17) api::server: Server started on the address: 127.0.0.1:8000
