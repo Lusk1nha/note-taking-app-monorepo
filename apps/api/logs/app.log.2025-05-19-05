@@ -36,3 +36,7 @@
 2025-05-19T05:54:43.9325225Z  INFO ThreadId(01) api::router: Configuring API routes
 2025-05-19T05:54:43.9329059Z  INFO ThreadId(01) api::router: Building v1 routes under /api/v1
 2025-05-19T05:54:43.933668Z  INFO ThreadId(02) api::server: Server started on the address: 127.0.0.1:8000
+2025-05-19T05:59:12.7739948Z  WARN ThreadId(01) api: Received SIGINT signal, initiating graceful shutdown
+2025-05-19T05:59:12.7744926Z  INFO ThreadId(01) api::database: Closing database connection pool
+2025-05-19T05:59:12.7746045Z  INFO ThreadId(11) api::server: Shutdown signal received, stopping server gracefully...
+2025-05-19T05:59:12.774753Z  INFO ThreadId(01) api: Database connection pool closed

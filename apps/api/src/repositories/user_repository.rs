@@ -13,6 +13,7 @@ use crate::{
 #[async_trait]
 pub trait UserRepository: Send + Sync {
     async fn get_by_id(&self, id: &str) -> Result<Option<User>, RepositoryError>;
+    async fn get_all(&self) -> Result<Vec<User>, RepositoryError>;
     async fn create(
         &self,
         executor: &mut Transaction<'_, Postgres>,
@@ -44,6 +45,20 @@ impl UserRepository for PostgresUserRepository {
             id
         )
         .fetch_optional(&mut *conn)
+        .await
+        .map_err(|e| RepositoryError::QueryError(e.into()))
+    }
+
+    async fn get_all(&self) -> Result<Vec<User>, RepositoryError> {
+        let mut conn = self.pool.lock().await.acquire().await?;
+
+        sqlx::query_as!(
+            User,
+            r#"
+            SELECT * FROM users
+            "#,
+        )
+        .fetch_all(&mut *conn)
         .await
         .map_err(|e| RepositoryError::QueryError(e.into()))
     }

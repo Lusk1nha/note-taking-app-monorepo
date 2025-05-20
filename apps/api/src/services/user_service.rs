@@ -1,4 +1,5 @@
 use sqlx::{Postgres, Transaction};
+use uuid::Uuid;
 
 use crate::{
     domain::user::{
@@ -19,8 +20,15 @@ impl<R: UserRepository> UserService<R> {
         Self { repository }
     }
 
-    pub async fn get_user_by_id(&self, id: &str) -> Result<Option<User>, UserServiceError> {
-        self.repository.get_by_id(id).await.map_err(Into::into)
+    pub async fn get_user_by_id(&self, id: &Uuid) -> Result<Option<User>, UserServiceError> {
+        self.repository
+            .get_by_id(&id.to_string())
+            .await
+            .map_err(Into::into)
+    }
+
+    pub async fn get_all_users(&self) -> Result<Vec<User>, UserServiceError> {
+        self.repository.get_all().await.map_err(Into::into)
     }
 
     pub async fn create_user(

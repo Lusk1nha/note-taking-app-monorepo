@@ -1,7 +1,6 @@
 use axum::Router;
 use std::{net::SocketAddr, sync::Arc};
 use tokio::sync::Notify;
-use tracing::info;
 
 use crate::app_state::AppState;
 
@@ -25,19 +24,19 @@ impl AppServer {
         );
 
         let listener = tokio::net::TcpListener::bind(&address).await?;
-        info!("Server started on the address: {}", address);
+        tracing::info!("Server started on the address: {}", address);
 
         let shutdown_signal_clone = self.shutdown_signal.clone();
         let shutdown_future = async move {
             shutdown_signal_clone.notified().await;
-            info!("Shutdown signal received, stopping server gracefully...");
+            tracing::info!("Shutdown signal received, stopping server gracefully...");
         };
 
         axum::serve(listener, api_routes)
             .with_graceful_shutdown(shutdown_future)
             .await?;
 
-        info!("Server stopped gracefully");
+        tracing::info!("Server stopped gracefully");
         Ok(())
     }
 

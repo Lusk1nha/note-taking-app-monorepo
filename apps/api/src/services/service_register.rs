@@ -3,6 +3,7 @@ use std::sync::Arc;
 use crate::{
     app_state::AppState,
     repositories::{
+        admin_repository::{self, PostgresAdminRepository},
         auth_provider_repository::PostgresAuthProviderRepository,
         credentials_repository::PostgresCredentialsRepository,
         user_repository::PostgresUserRepository,
@@ -10,14 +11,16 @@ use crate::{
 };
 
 use super::{
-    auth_provider_service::AuthProviderService, auth_service::AuthService,
-    credentials_service::CredentialsService, jwt_service::JwtService, user_service::UserService,
+    admin_service::AdminService, auth_provider_service::AuthProviderService,
+    auth_service::AuthService, credentials_service::CredentialsService, jwt_service::JwtService,
+    user_service::UserService,
 };
 
 pub struct ServiceRegister {
     pub user_service: Arc<UserService<PostgresUserRepository>>,
     pub credentials_service: Arc<CredentialsService<PostgresCredentialsRepository>>,
     pub auth_provider_service: Arc<AuthProviderService<PostgresAuthProviderRepository>>,
+    pub jwt_service: Arc<JwtService>,
 
     pub auth_service: Arc<
         AuthService<
@@ -26,6 +29,7 @@ pub struct ServiceRegister {
             PostgresAuthProviderRepository,
         >,
     >,
+    pub admin_service: Arc<AdminService<PostgresAdminRepository>>,
 }
 
 impl ServiceRegister {
@@ -36,6 +40,7 @@ impl ServiceRegister {
             PostgresCredentialsRepository::new(app_state.database.pool.clone());
         let auth_provider_repository =
             PostgresAuthProviderRepository::new(app_state.database.pool.clone());
+        let admin_repository = PostgresAdminRepository::new(app_state.database.pool.clone());
 
         // Inicialização dos serviços
         let user_service = Arc::new(UserService::new(user_repository));
@@ -50,12 +55,15 @@ impl ServiceRegister {
             auth_provider_service.clone(),
             jwt_service.clone(),
         ));
+        let admin_service = Arc::new(AdminService::new(admin_repository));
 
         Arc::new(Self {
             user_service,
             credentials_service,
             auth_provider_service,
+            jwt_service,
             auth_service,
+            admin_service,
         })
     }
 }

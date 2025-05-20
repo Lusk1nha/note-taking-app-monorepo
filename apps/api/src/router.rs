@@ -4,6 +4,7 @@ use std::sync::Arc;
 use crate::{
     app_routes::{
         auth_routes::auth_routes, health_routes::health_routes, root_routes::root_routes,
+        user_routes::user_routes,
     },
     app_state::AppState,
     common::cors::AppCors,
@@ -14,6 +15,7 @@ use crate::{
 const API_NEST_PATH: &str = "/api";
 const API_HEALTH_PATH: &str = "/health";
 const API_AUTH_PATH: &str = "/auth";
+const API_USER_PATH: &str = "/users";
 
 const API_VERSION: &str = "/v1";
 
@@ -46,11 +48,13 @@ impl AppRouter {
         let root_routes = root_routes();
         let health_routes = health_routes();
         let auth_routes = auth_routes(services.clone());
+        let user_routes = user_routes(services.clone());
 
         Router::new()
             .merge(root_routes)
             .nest(API_HEALTH_PATH, health_routes)
             .nest(API_AUTH_PATH, auth_routes)
+            .nest(API_USER_PATH, user_routes)
             .fallback(NotFoundController::version_not_found)
     }
 }
