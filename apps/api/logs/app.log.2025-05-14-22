@@ -1,4 +1,0 @@
-2025-05-14T22:55:48.8849885Z  WARN ThreadId(01) api: Received SIGINT signal, initiating graceful shutdown
-2025-05-14T22:55:48.8856146Z  INFO ThreadId(01) api::database: Closing database connection pool
-2025-05-14T22:55:48.8856753Z  INFO ThreadId(15) api::server: Shutdown signal received, stopping server gracefully...
-2025-05-14T22:55:48.8857716Z  INFO ThreadId(01) api: Database connection pool closed
