@@ -7,11 +7,11 @@ use crate::{
 };
 
 #[derive(Clone)]
-pub struct RequiredRolesMiddleware {
+pub struct RequireAnyRoleMiddleware {
     required_roles: HashSet<Role>,
 }
 
-impl RequiredRolesMiddleware {
+impl RequireAnyRoleMiddleware {
     pub fn new(roles: Vec<Role>) -> Self {
         let required_roles = roles.into_iter().collect::<HashSet<_>>();
         Self { required_roles }

@@ -1,0 +1,20 @@
+2025-05-22T02:41:01.6196372Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-22T02:41:01.6275852Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-22T02:41:01.6289852Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-22T02:41:01.738819Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-22T02:41:01.8846746Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-22T02:41:01.9320561Z  INFO ThreadId(01) api::database: Database migrations completed successfully
+2025-05-22T02:41:01.932632Z  INFO ThreadId(01) api::app_state: Setting up application state
+2025-05-22T02:41:01.9327453Z  INFO ThreadId(01) api::router: Configuring API routes
+2025-05-22T02:41:01.9331683Z  INFO ThreadId(01) api::router: Building v1 routes under /api/v1
+2025-05-22T02:41:01.9340789Z  INFO ThreadId(02) api::server: Server started on the address: 127.0.0.1:8000
+2025-05-22T02:47:51.0577041Z  INFO ThreadId(01) api: Starting application initialization
+2025-05-22T02:47:51.0583719Z  INFO ThreadId(01) api::environment: Setting up environment variables
+2025-05-22T02:47:51.0595968Z  WARN ThreadId(01) sqlx_postgres::options::parse: ignoring unrecognized connect parameter key=schema value=public
+2025-05-22T02:47:51.1331871Z  INFO ThreadId(01) api::database: Database connection pool created
+2025-05-22T02:47:51.1374217Z  INFO ThreadId(01) sqlx::postgres::notice: relação "_sqlx_migrations" já existe, ignorando
+2025-05-22T02:47:51.1395161Z  INFO ThreadId(01) api::database: Database migrations completed successfully
+2025-05-22T02:47:51.1396693Z  INFO ThreadId(01) api::app_state: Setting up application state
+2025-05-22T02:47:51.1398185Z  INFO ThreadId(01) api::router: Configuring API routes
+2025-05-22T02:47:51.1401659Z  INFO ThreadId(01) api::router: Building v1 routes under /api/v1
+2025-05-22T02:47:51.1411056Z  INFO ThreadId(12) api::server: Server started on the address: 127.0.0.1:8000

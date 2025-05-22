@@ -1,2 +1,2 @@
 pub mod auth_middleware;
-pub mod required_roles_middleware;
+pub mod require_roles_middleware;
