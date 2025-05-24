@@ -1,98 +1,94 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { AuthProviderService } from '../auth-provider/auth-provider.service';
-import { CredentialsService } from '../credentials/credentials.service';
-import { UsersService } from '../users/users.service';
-import { Email } from 'src/common/entities/email';
+import { Injectable, Logger } from '@nestjs/common'
+import { Email } from 'src/common/entities/email'
+import { AuthProviderService } from '../auth-provider/auth-provider.service'
+import { CredentialsService } from '../credentials/credentials.service'
+import { UsersService } from '../users/users.service'
 
-import { AuthProviderType } from '@prisma/client';
-import {
-  InvalidCredentialsException,
-  UserAlreadyExistsException,
-  UserNotFoundException,
-} from './errors/auth.errors';
-import { UserEntity } from '../users/entity/user.entity';
-import { PrismaService } from 'src/common/prisma/prisma.service';
-import { PrismaTransaction } from 'src/common/prisma/prisma.type';
+import { AuthProviderType } from '@prisma/client'
+import { PrismaService } from 'src/common/prisma/prisma.service'
+import { PrismaTransaction } from 'src/common/prisma/prisma.type'
+import { UserEntity } from '../users/entity/user.entity'
+import { InvalidCredentialsException, UserAlreadyExistsException, UserNotFoundException } from './errors/auth.errors'
 
-import { TokenService } from '../token/token.service';
-import { Password } from 'src/common/entities/password/password';
-import { UUID } from 'src/common/entities/uuid/uuid';
+import { Password } from 'src/common/entities/password/password'
+import { UUID } from 'src/common/entities/uuid/uuid'
+import { TokenService } from '../token/token.service'
 
 @Injectable()
 export class AuthService {
-  private readonly logger = new Logger(AuthService.name);
+	private readonly logger = new Logger(AuthService.name)
 
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly tokenService: TokenService,
-    private readonly authProviderService: AuthProviderService,
-    private readonly credentialsService: CredentialsService,
-    private readonly usersService: UsersService,
-  ) {}
+	constructor(
+		private readonly prisma: PrismaService,
+		private readonly tokenService: TokenService,
+		private readonly authProviderService: AuthProviderService,
+		private readonly credentialsService: CredentialsService,
+		private readonly usersService: UsersService,
+	) {}
 
-  async signUp(email: Email, password: Password): Promise<UserEntity> {
-    const existingCredential = await this.credentialsService.findByEmail(email);
+	async signUp(email: Email, password: Password): Promise<UserEntity> {
+		const existingCredential = await this.credentialsService.findByEmail(email)
 
-    if (existingCredential) {
-      throw new UserAlreadyExistsException();
-    }
+		if (existingCredential) {
+			throw new UserAlreadyExistsException()
+		}
 
-    return await this.prisma.$transaction(async (tx: PrismaTransaction) => {
-      const user = await this.usersService.createUser(tx);
+		return await this.prisma.$transaction(async (tx: PrismaTransaction) => {
+			const user = await this.usersService.createUser(tx)
 
-      await this.credentialsService.createCredential(
-        {
-          userId: user.id,
-          email,
-          password,
-        },
-        tx,
-      );
+			await this.credentialsService.createCredential(
+				{
+					userId: user.id,
+					email,
+					password,
+				},
+				tx,
+			)
 
-      await this.authProviderService.createAuthProvider(
-        {
-          userId: user.id,
-          providerType: AuthProviderType.CREDENTIALS,
-        },
-        tx,
-      );
+			await this.authProviderService.createAuthProvider(
+				{
+					userId: user.id,
+					providerType: AuthProviderType.CREDENTIALS,
+				},
+				tx,
+			)
 
-      this.logger.log(`User ${user.id} registered successfully`);
+			this.logger.log(`User ${user.id} registered successfully`)
 
-      return user;
-    });
-  }
+			return user
+		})
+	}
 
-  async signIn(email: Email, password: Password) {
-    const credential = await this.credentialsService.findByEmail(email);
+	async signIn(email: Email, password: Password) {
+		const credential = await this.credentialsService.findByEmail(email)
 
-    if (!credential) {
-      throw new UserNotFoundException();
-    }
+		if (!credential) {
+			throw new UserNotFoundException()
+		}
 
-    const isValid = await this.credentialsService.validatePassword(email, password);
+		const isValid = await this.credentialsService.validatePassword(email, password)
 
-    if (!isValid) {
-      throw new InvalidCredentialsException();
-    }
+		if (!isValid) {
+			throw new InvalidCredentialsException()
+		}
 
-    const user = await this.usersService.findById(credential.id);
+		const user = await this.usersService.findById(credential.id)
 
-    if (!user) {
-      throw new UserNotFoundException();
-    }
+		if (!user) {
+			throw new UserNotFoundException()
+		}
 
-    return await this.tokenService.generateToken(user);
-  }
+		return await this.tokenService.generateToken(user)
+	}
 
-  async revalidateToken(token: string) {
-    const claims = await this.tokenService.decodeRefreshToken(token);
-    const user = await this.usersService.findById(new UUID(claims.sub));
+	async revalidateToken(token: string) {
+		const claims = await this.tokenService.decodeRefreshToken(token)
+		const user = await this.usersService.findById(new UUID(claims.sub))
 
-    if (!user) {
-      throw new UserNotFoundException();
-    }
+		if (!user) {
+			throw new UserNotFoundException()
+		}
 
-    return this.tokenService.refreshTokens(user, token);
-  }
+		return this.tokenService.refreshTokens(user, token)
+	}
 }

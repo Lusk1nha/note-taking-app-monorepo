@@ -1,54 +1,54 @@
 {
-  "name": "@note-taking-app/ui",
-  "version": "1.0.0",
-  "license": "MIT",
-  "private": true,
-  "sideEffects": [
-    "**/*.css"
-  ],
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "tailwindcss -i ./src/styles.css -o ./dist/styles.css",
-    "lint": "eslint src/",
-    "dev": "tailwindcss -i ./src/styles.css -o ./dist/styles.css --watch",
-    "type-check": "tsc --noEmit"
-  },
-  "packageManager": "pnpm@10.7.1",
-  "peerDependencies": {
-    "react": "^18.2.0"
-  },
-  "exports": {
-    "./theme.css": "./src/theme.css",
-    "./styles.css": "./dist/styles.css",
-    "./separator": "./src/components/separator.tsx",
-    "./title": "./src/components/title.tsx",
-    "./text": "./src/components/text.tsx",
-    "./button": "./src/components/button.tsx",
-    "./option-selector": "./src/components/option-selector.tsx",
-    "./input": "./src/components/input.tsx",
-    "./label": "./src/components/label.tsx",
-    "./tip-message": "./src/components/tip-message.tsx",
-    "./sonner": "./src/components/sonner.tsx"
-  },
-  "devDependencies": {
-    "@note-taking-app/eslint-config": "workspace:*",
-    "@note-taking-app/typescript-config": "workspace:*",
-    "@turbo/gen": "^2.4.4",
-    "@types/node": "^20.17.30",
-    "@types/react": "^19.1.2",
-    "typescript": "^5.8.3"
-  },
-  "dependencies": {
-    "@note-taking-app/design-system": "workspace:*",
-    "@note-taking-app/utils": "workspace:*",
-    "@tailwindcss/cli": "^4.1.4",
-    "@tailwindcss/postcss": "^4.1.4",
-    "class-variance-authority": "^0.7.1",
-    "lucide-react": "^0.503.0",
-    "postcss": "^8.5.3",
-    "sonner": "^2.0.3",
-    "tailwindcss": "^4.1.4"
-  }
+	"name": "@note-taking-app/ui",
+	"version": "1.0.0",
+	"license": "MIT",
+	"private": true,
+	"sideEffects": [
+		"**/*.css"
+	],
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tailwindcss -i ./src/styles.css -o ./dist/styles.css",
+		"lint": "eslint src/",
+		"dev": "tailwindcss -i ./src/styles.css -o ./dist/styles.css --watch",
+		"type-check": "tsc --noEmit"
+	},
+	"packageManager": "pnpm@10.7.1",
+	"peerDependencies": {
+		"react": "^18.2.0"
+	},
+	"exports": {
+		"./theme.css": "./src/theme.css",
+		"./styles.css": "./dist/styles.css",
+		"./separator": "./src/components/separator.tsx",
+		"./title": "./src/components/title.tsx",
+		"./text": "./src/components/text.tsx",
+		"./button": "./src/components/button.tsx",
+		"./option-selector": "./src/components/option-selector.tsx",
+		"./input": "./src/components/input.tsx",
+		"./label": "./src/components/label.tsx",
+		"./tip-message": "./src/components/tip-message.tsx",
+		"./sonner": "./src/components/sonner.tsx"
+	},
+	"devDependencies": {
+		"@note-taking-app/eslint-config": "workspace:*",
+		"@note-taking-app/typescript-config": "workspace:*",
+		"@turbo/gen": "^2.4.4",
+		"@types/node": "^20.17.30",
+		"@types/react": "^19.1.2",
+		"typescript": "^5.8.3"
+	},
+	"dependencies": {
+		"@note-taking-app/design-system": "workspace:*",
+		"@note-taking-app/utils": "workspace:*",
+		"@tailwindcss/cli": "^4.1.4",
+		"@tailwindcss/postcss": "^4.1.4",
+		"class-variance-authority": "^0.7.1",
+		"lucide-react": "^0.503.0",
+		"postcss": "^8.5.3",
+		"sonner": "^2.0.3",
+		"tailwindcss": "^4.1.4"
+	}
 }

@@ -1,14 +1,14 @@
-import { z } from 'zod';
-import { PASSWORD_VALIDATION } from '../common/validations-presets';
+import { z } from 'zod'
+import { PASSWORD_VALIDATION } from '../common/validations-presets'
 
 export const resetPasswordValidation = z
-  .object({
-    newPassword: PASSWORD_VALIDATION,
-    confirmPassword: PASSWORD_VALIDATION,
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: 'New password and confirm password must match',
-    path: ['confirmPassword'],
-  });
+	.object({
+		newPassword: PASSWORD_VALIDATION,
+		confirmPassword: PASSWORD_VALIDATION,
+	})
+	.refine((data) => data.newPassword === data.confirmPassword, {
+		message: 'New password and confirm password must match',
+		path: ['confirmPassword'],
+	})
 
-export type ResetPasswordFormType = z.infer<typeof resetPasswordValidation>;
+export type ResetPasswordFormType = z.infer<typeof resetPasswordValidation>

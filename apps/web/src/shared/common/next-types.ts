@@ -1,3 +1,3 @@
 export interface NextArtefactProps {
-  children: React.ReactNode;
+	children: React.ReactNode
 }

@@ -1,9 +1,9 @@
-import { Navbar } from '@/components/navbar/navbar';
+import { Navbar } from '@/components/navbar/navbar'
 
 export default function NavbarDefault() {
-  return (
-    <div className="block lg:hidden">
-      <Navbar />
-    </div>
-  );
+	return (
+		<div className='block lg:hidden'>
+			<Navbar />
+		</div>
+	)
 }

@@ -1,10 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger'
 
-import { AppEntity } from '../entity/app.entity';
+import { AppEntity } from '../entity/app.entity'
 
 export class AppInfoOutput {
-  @ApiProperty({
-    description: 'API information object',
-  })
-  api: AppEntity;
+	@ApiProperty({
+		description: 'API information object',
+	})
+	api: AppEntity
 }

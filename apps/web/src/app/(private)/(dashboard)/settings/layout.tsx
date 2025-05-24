@@ -1,18 +1,18 @@
-import { NextArtefactProps } from '@/shared/common/next-types';
+import { NextArtefactProps } from '@/shared/common/next-types'
 
 interface SettingsLayoutProps extends NextArtefactProps {
-  audience: React.ReactNode;
-  controls: React.ReactNode;
+	audience: React.ReactNode
+	controls: React.ReactNode
 }
 
 export default function SettingsLayout({
-  audience,
-  controls,
+	audience,
+	controls,
 }: Readonly<SettingsLayoutProps>) {
-  return (
-    <main className="w-full h-full flex flex-col lg:flex-row gap-y-200 relative">
-      {controls}
-      {audience}
-    </main>
-  );
+	return (
+		<main className='w-full h-full flex flex-col lg:flex-row gap-y-200 relative'>
+			{controls}
+			{audience}
+		</main>
+	)
 }

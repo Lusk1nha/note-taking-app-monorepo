@@ -1,9 +1,9 @@
-import { Sidebar } from '@/components/sidebar/sidebar';
+import { Sidebar } from '@/components/sidebar/sidebar'
 
 export default function SidebarDefault() {
-  return (
-    <div className="hidden lg:flex">
-      <Sidebar />
-    </div>
-  );
+	return (
+		<div className='hidden lg:flex'>
+			<Sidebar />
+		</div>
+	)
 }
