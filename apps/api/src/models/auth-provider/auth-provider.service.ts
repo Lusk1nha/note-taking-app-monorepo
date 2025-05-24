@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { AuthProviderRepository } from './auth-provider.repository';
 import { CreateAuthProviderInput } from './dto/auth-provider.post.dto';
 import { AuthProviderEntity } from './entity/auth-provider.entity';
@@ -6,6 +6,8 @@ import { PrismaTransaction } from 'src/common/prisma/prisma.type';
 
 @Injectable()
 export class AuthProviderService {
+  private readonly logger = new Logger(AuthProviderService.name);
+
   constructor(private readonly authProviderRepository: AuthProviderRepository) {}
 
   async createAuthProvider(
@@ -14,7 +16,7 @@ export class AuthProviderService {
   ): Promise<AuthProviderEntity> {
     const userId = payload.userId.value;
 
-    const response = await this.authProviderRepository.create(
+    const authProvider = await this.authProviderRepository.create(
       {
         user: {
           connect: {
@@ -26,6 +28,8 @@ export class AuthProviderService {
       tx,
     );
 
-    return new AuthProviderEntity(response);
+    this.logger.log(`AuthProvider with ID ${authProvider.id} created`);
+
+    return new AuthProviderEntity(authProvider);
   }
 }

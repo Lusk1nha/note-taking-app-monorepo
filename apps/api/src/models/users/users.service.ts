@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 
 import { UUID } from 'src/common/entities/uuid/uuid';
@@ -6,12 +6,17 @@ import { UserEntity } from './entity/user.entity';
 import { PrismaTransaction } from 'src/common/prisma/prisma.type';
 import { UpdateUserInput } from './dto/users.patch.dto';
 import { PrismaService } from 'src/common/prisma/prisma.service';
+import { UserNotFoundException } from './errors/users.errors';
+import { EmailsService } from '../emails/emails.service';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly usersRepository: UsersRepository,
+    private readonly emailsService: EmailsService,
   ) {}
 
   async findById(id: UUID): Promise<UserEntity | null> {
@@ -41,6 +46,8 @@ export class UsersService {
       tx,
     );
 
+    this.logger.log(`User with ID ${userId.value} created`);
+
     return new UserEntity(response);
   }
 
@@ -59,15 +66,18 @@ export class UsersService {
     );
 
     if (!user) {
-      throw new Error(`User with ID ${userId.value} not found`);
+      throw new UserNotFoundException();
     }
 
+    this.logger.log(`User with ID ${userId.value} updated`);
     return new UserEntity(user);
   }
 
   async deleteUser(userId: UUID): Promise<void> {
-    this.prisma.$transaction(async (tx) => {
+    await this.prisma.$transaction(async (tx) => {
       await this.usersRepository.delete(userId.value, tx);
     });
+
+    this.logger.log(`User with ID ${userId.value} deleted`);
   }
 }

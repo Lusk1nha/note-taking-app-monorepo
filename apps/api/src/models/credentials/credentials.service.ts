@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CredentialsRepository } from './credentials.repository';
 import { CreateCredentialsInput } from './dto/credentials.post.dto';
 import { comparePassword, hashPassword } from 'src/helpers/hash';
@@ -11,6 +11,8 @@ import { Password } from 'src/common/entities/password/password';
 
 @Injectable()
 export class CredentialsService {
+  private readonly logger = new Logger(CredentialsService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly credentialsRepository: CredentialsRepository,
@@ -33,12 +35,12 @@ export class CredentialsService {
   async createCredential(
     data: CreateCredentialsInput,
     tx?: PrismaTransaction,
-  ): Promise<CredentialsEntity> {
+  ): Promise<CredentialsEntity>  {
     const userIdAsString = data.userId.value;
     const emailAsString = data.email.value;
     const passwordHash = hashPassword(data.password.value);
 
-    const response = await this.credentialsRepository.create(
+    const credential = await this.credentialsRepository.create(
       {
         email: emailAsString,
         passwordHash,
@@ -51,11 +53,13 @@ export class CredentialsService {
       tx,
     );
 
-    return new CredentialsEntity(response);
+    this.logger.log(`Credential with ID ${credential.id} created`);
+
+    return new CredentialsEntity(credential);
   }
 
   async updatePassword(userId: UUID, password: Password): Promise<void> {
-    return await this.prisma.$transaction(async (tx: PrismaTransaction) => {
+    await this.prisma.$transaction(async (tx: PrismaTransaction) => {
       const id = userId.value;
       const newPasswordHash = hashPassword(password.value);
 
@@ -71,10 +75,12 @@ export class CredentialsService {
         tx,
       );
     });
+
+    this.logger.log(`Password for user with ID ${userId.value} updated`);
   }
 
   async updateEmail(userId: UUID, email: Email): Promise<void> {
-    return await this.prisma.$transaction(async (tx: PrismaTransaction) => {
+    await this.prisma.$transaction(async (tx: PrismaTransaction) => {
       const id = userId.value;
       const emailAsString = email.value;
 
@@ -90,6 +96,8 @@ export class CredentialsService {
         tx,
       );
     });
+
+    this.logger.log(`Email for user with ID ${userId.value} updated`);
   }
 
   async validatePassword(email: Email, password: Password): Promise<boolean> {

@@ -24,9 +24,6 @@ export class UsersController {
     summary: 'Get current user',
     description: 'Get the current authenticated user',
   })
-  @ApiOkResponse({
-    type: UserEntity,
-  })
   async getCurrentUser(@GetUser() user: UserAuthType): Promise<CurrentUserOutput> {
     const userId = new UUID(user.sub);
 
@@ -46,10 +43,6 @@ export class UsersController {
     summary: 'Get all users',
     description: 'Get all users in the system',
   })
-  @ApiOkResponse({
-    type: UserEntity,
-    isArray: true,
-  })
   @AllowAuthenticated(Role.Admin)
   async getAllUsers(): Promise<AllUsersOutput> {
     const users = await this.usersService.findAll();
@@ -62,9 +55,6 @@ export class UsersController {
   @ApiOperation({
     summary: 'Get user by ID',
     description: 'Get a user by their ID',
-  })
-  @ApiOkResponse({
-    type: UserEntity,
   })
   async getById(
     @UUIDParam('id') id: UUID,

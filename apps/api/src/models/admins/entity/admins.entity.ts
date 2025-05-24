@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Admin } from '@prisma/client';
-import { IsDate, IsUUID } from 'class-validator';
+import { IsDate } from 'class-validator';
 import { UUID } from 'src/common/entities/uuid/uuid';
 
 export class AdminEntity {
@@ -12,7 +12,6 @@ export class AdminEntity {
   @ApiProperty({
     description: 'Unique identifier for the user',
   })
-  @IsUUID()
   id: UUID;
 
   @ApiProperty({

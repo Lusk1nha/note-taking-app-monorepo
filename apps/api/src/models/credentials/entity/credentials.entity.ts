@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Credential } from '@prisma/client';
-import { IsString, IsDate, IsEmail, IsUUID } from 'class-validator';
+import { IsString, IsDate, IsEmail } from 'class-validator';
 import { Email } from 'src/common/entities/email';
 import { UUID } from 'src/common/entities/uuid/uuid';
 
@@ -14,7 +14,6 @@ export class CredentialsEntity {
   }
 
   @ApiProperty()
-  @IsUUID()
   id: UUID;
 
   @ApiProperty()

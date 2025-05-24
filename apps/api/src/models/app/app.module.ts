@@ -14,11 +14,23 @@ import { HealthModule } from '../health/health.module';
 import { TokenModule } from '../token/token.module';
 import { AdminsModule } from '../admins/admins.module';
 import { RolesModule } from '../roles/roles.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { EmailsModule } from '../emails/emails.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.EMAIL_HOST,
+        port: Number(process.env.EMAIL_PORT),
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      },
     }),
 
     PrismaModule,
@@ -35,6 +47,7 @@ import { RolesModule } from '../roles/roles.module';
     AuthModule,
     AdminsModule,
     RolesModule,
+    EmailsModule,
     TokenModule,
   ],
   controllers: [AppController],
