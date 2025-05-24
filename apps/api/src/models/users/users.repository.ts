@@ -20,11 +20,48 @@ export class UsersRepository extends BaseRepository<User> {
     });
   }
 
+  async findMany(
+    where?: Prisma.UserWhereInput,
+    orderBy?: Prisma.UserOrderByWithRelationInput,
+    skip?: number,
+    take?: number,
+  ): Promise<User[]> {
+    const client = this.getDelegate();
+
+    return client.user.findMany({
+      where,
+      orderBy,
+      skip,
+      take,
+    });
+  }
+
   async create(data: Prisma.UserCreateInput, tx?: PrismaTransaction) {
     const client = this.getDelegate(tx);
 
     return client.user.create({
       data,
+    });
+  }
+
+  async update(id: string, data: Prisma.UserUpdateInput, tx?: PrismaTransaction) {
+    const client = this.getDelegate(tx);
+
+    return client.user.update({
+      where: {
+        id,
+      },
+      data,
+    });
+  }
+
+  async delete(id: string, tx?: PrismaTransaction) {
+    const client = this.getDelegate(tx);
+
+    return client.user.delete({
+      where: {
+        id,
+      },
     });
   }
 }

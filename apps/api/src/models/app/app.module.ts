@@ -9,6 +9,11 @@ import { UsersModule } from '../users/users.module';
 import { CredentialsModule } from '../credentials/credentials.module';
 import { AuthProviderModule } from '../auth-provider/auth-provider.module';
 import { AuthModule } from '../auth/auth.module';
+import { HealthModule } from '../health/health.module';
+
+import { TokenModule } from '../token/token.module';
+import { AdminsModule } from '../admins/admins.module';
+import { RolesModule } from '../roles/roles.module';
 
 @Module({
   imports: [
@@ -23,10 +28,14 @@ import { AuthModule } from '../auth/auth.module';
       signOptions: { expiresIn: JWT_EXPIRATION },
     }),
 
+    HealthModule,
     UsersModule,
     CredentialsModule,
     AuthProviderModule,
     AuthModule,
+    AdminsModule,
+    RolesModule,
+    TokenModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -5,10 +5,16 @@ import { comparePassword, hashPassword } from 'src/helpers/hash';
 import { Email } from 'src/common/entities/email';
 import { CredentialsEntity } from './entity/credentials.entity';
 import { PrismaTransaction } from 'src/common/prisma/prisma.type';
+import { UUID } from 'src/common/entities/uuid/uuid';
+import { PrismaService } from 'src/common/prisma/prisma.service';
+import { Password } from 'src/common/entities/password/password';
 
 @Injectable()
 export class CredentialsService {
-  constructor(private readonly credentialsRepository: CredentialsRepository) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly credentialsRepository: CredentialsRepository,
+  ) {}
 
   async findByEmail(email: Email): Promise<CredentialsEntity | null> {
     const emailAsString = email.value;
@@ -30,7 +36,7 @@ export class CredentialsService {
   ): Promise<CredentialsEntity> {
     const userIdAsString = data.userId.value;
     const emailAsString = data.email.value;
-    const passwordHash = hashPassword(data.password);
+    const passwordHash = hashPassword(data.password.value);
 
     const response = await this.credentialsRepository.create(
       {
@@ -48,14 +54,52 @@ export class CredentialsService {
     return new CredentialsEntity(response);
   }
 
-  async validatePassword(email: Email, password: string): Promise<boolean> {
+  async updatePassword(userId: UUID, password: Password): Promise<void> {
+    return await this.prisma.$transaction(async (tx: PrismaTransaction) => {
+      const id = userId.value;
+      const newPasswordHash = hashPassword(password.value);
+
+      await this.credentialsRepository.update(
+        {
+          where: {
+            id,
+          },
+          data: {
+            passwordHash: newPasswordHash,
+          },
+        },
+        tx,
+      );
+    });
+  }
+
+  async updateEmail(userId: UUID, email: Email): Promise<void> {
+    return await this.prisma.$transaction(async (tx: PrismaTransaction) => {
+      const id = userId.value;
+      const emailAsString = email.value;
+
+      await this.credentialsRepository.update(
+        {
+          where: {
+            id,
+          },
+          data: {
+            email: emailAsString,
+          },
+        },
+        tx,
+      );
+    });
+  }
+
+  async validatePassword(email: Email, password: Password): Promise<boolean> {
     const credentials = await this.findByEmail(email);
 
     if (!credentials) {
       return false;
     }
 
-    const isValid = await comparePassword(password, credentials.passwordHash);
+    const isValid = await comparePassword(password.value, credentials.passwordHash);
 
     return isValid;
   }

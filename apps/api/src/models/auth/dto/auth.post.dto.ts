@@ -1,21 +1,26 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import { JWTOutput } from 'src/common/types/jwt.types';
+import { Transform } from 'class-transformer';
+import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { TokenEntity } from 'src/models/token/entity/token.entity';
+
 import { UserEntity } from 'src/models/users/entity/user.entity';
 
 export class RegisterRequestInput {
   @ApiProperty({
     description: "User's email address",
+    example: 'user@example.com',
   })
   @IsEmail()
-  @IsNotEmpty()
+  @Transform(({ value }) => value.toLowerCase().trim())
   email: string;
 
   @ApiProperty({
     description: "User's password",
+    minLength: 8,
+    example: 'verysecurepassword',
   })
   @IsString()
-  @IsNotEmpty()
+  @MinLength(8)
   password: string;
 }
 
@@ -36,7 +41,7 @@ export class LoginRequestInput {
     description: "User's email address",
   })
   @IsEmail()
-  @IsNotEmpty()
+  @Transform(({ value }) => value.toLowerCase().trim())
   email: string;
 
   @ApiProperty({
@@ -47,9 +52,11 @@ export class LoginRequestInput {
   password: string;
 }
 
-export class LoginResponseOutput {
+export class RevalidateTokenRequestInput {
   @ApiProperty({
-    description: 'Access token for authentication',
+    description: 'Refresh token for revalidation',
   })
-  accessToken: JWTOutput;
+  @IsString()
+  @IsNotEmpty()
+  refreshToken: string;
 }

@@ -1,44 +1,40 @@
-import {
-  ConflictException,
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { AuthProviderService } from '../auth-provider/auth-provider.service';
 import { CredentialsService } from '../credentials/credentials.service';
 import { UsersService } from '../users/users.service';
 import { Email } from 'src/common/entities/email';
 
 import { AuthProviderType } from '@prisma/client';
-import { AuthError } from './errors/auth.errors';
+import {
+  InvalidCredentialsException,
+  UserAlreadyExistsException,
+  UserNotFoundException,
+} from './errors/auth.errors';
 import { UserEntity } from '../users/entity/user.entity';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { PrismaTransaction } from 'src/common/prisma/prisma.type';
-import { createJWTPayload } from 'src/helpers/jwt';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { JWTOutput } from 'src/common/types/jwt.types';
+
+import { TokenService } from '../token/token.service';
+import { Password } from 'src/common/entities/password/password';
+import { UUID } from 'src/common/entities/uuid/uuid';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
-  private readonly jwtAlgorithm = 'HS256';
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly configService: ConfigService,
-    private readonly jwtService: JwtService,
+    private readonly tokenService: TokenService,
     private readonly authProviderService: AuthProviderService,
     private readonly credentialsService: CredentialsService,
     private readonly usersService: UsersService,
   ) {}
 
-  async signUp(email: Email, password: string): Promise<UserEntity> {
+  async signUp(email: Email, password: Password): Promise<UserEntity> {
     const existingCredential = await this.credentialsService.findByEmail(email);
 
     if (existingCredential) {
-      throw new ConflictException(AuthError.USER_ALREADY_EXISTS);
+      throw new UserAlreadyExistsException();
     }
 
     return await this.prisma.$transaction(async (tx: PrismaTransaction) => {
@@ -67,56 +63,36 @@ export class AuthService {
     });
   }
 
-  async signIn(email: Email, password: string): Promise<JWTOutput> {
+  async signIn(email: Email, password: Password) {
     const credential = await this.credentialsService.findByEmail(email);
 
     if (!credential) {
-      throw new ConflictException(AuthError.USER_NOT_FOUND);
+      throw new UserNotFoundException();
     }
 
     const isValid = await this.credentialsService.validatePassword(email, password);
 
     if (!isValid) {
-      throw new UnauthorizedException(AuthError.INVALID_CREDENTIALS);
+      throw new InvalidCredentialsException();
     }
 
     const user = await this.usersService.findById(credential.id);
 
     if (!user) {
-      throw new ConflictException(AuthError.USER_NOT_FOUND);
+      throw new UserNotFoundException();
     }
 
-    const accessToken = await this._generateUserToken(user);
-
-    return accessToken;
+    return await this.tokenService.generateToken(user);
   }
 
-  private async _generateUserToken(user: UserEntity): Promise<JWTOutput> {
-    const payload = createJWTPayload(user);
+  async revalidateToken(token: string) {
+    const claims = await this.tokenService.decodeRefreshToken(token);
+    const user = await this.usersService.findById(new UUID(claims.sub));
 
-    const token = await this._generateJwtToken(payload);
-
-    this.logger.log(`User authenticated successfully: ${user.id.value}`);
-
-    const expiresIn = this.configService.get<string>('JWT_EXPIRATION');
-
-    if (!expiresIn) {
-      this.logger.error('JWT_EXPIRATION is not defined');
-      throw new InternalServerErrorException('JWT_EXPIRATION is not defined');
+    if (!user) {
+      throw new UserNotFoundException();
     }
 
-    return {
-      token,
-      expiresIn,
-      tokenType: 'Bearer',
-    };
-  }
-
-  private async _generateJwtToken(payload: object): Promise<string> {
-    return this.jwtService.signAsync(payload, {
-      algorithm: this.jwtAlgorithm,
-      expiresIn: this.configService.get<string>('JWT_EXPIRATION'),
-      secret: this.configService.get<string>('JWT_SECRET'),
-    });
+    return this.tokenService.refreshTokens(user, token);
   }
 }

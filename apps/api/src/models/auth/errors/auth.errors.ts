@@ -1,24 +1,65 @@
-export class AuthError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'AuthError';
-    this.message = message;
-    this.stack = new Error().stack;
-  }
+import { HttpStatus } from '@nestjs/common';
+import { BaseHttpException } from 'src/common/exceptions/exceptions.common';
 
-  static USER_ALREADY_EXISTS() {
-    return new AuthError('User already exists');
+export class NoTokenProvidedException extends BaseHttpException {
+  constructor() {
+    super(
+      {
+        message: "No token provided. Please include a 'Bearer' token in the Authorization header.",
+        code: 'NO_TOKEN_PROVIDED',
+      },
+      HttpStatus.UNAUTHORIZED,
+      'NO_TOKEN_PROVIDED',
+    );
   }
+}
 
-  static USER_NOT_FOUND() {
-    return new AuthError('User not found');
+export class InvalidProvidedTokenException extends BaseHttpException {
+  constructor() {
+    super(
+      { message: 'Invalid token', code: 'INVALID_TOKEN' },
+      HttpStatus.UNAUTHORIZED,
+      'INVALID_TOKEN',
+    );
   }
+}
 
-  static INVALID_CREDENTIALS() {
-    return new AuthError('Invalid credentials');
+export class ForbiddenResourceException extends BaseHttpException {
+  constructor() {
+    super(
+      { message: "You don't have permission to access this resource.", code: 'FORBIDDEN_RESOURCE' },
+      HttpStatus.FORBIDDEN,
+      'FORBIDDEN_RESOURCE',
+    );
   }
+}
 
-  static invalidToken() {
-    return new AuthError('Invalid token');
+export class UserAlreadyExistsException extends BaseHttpException {
+  constructor() {
+    super(
+      { message: 'User already exists', code: 'USER_ALREADY_EXISTS' },
+      HttpStatus.CONFLICT,
+      'USER_ALREADY_EXISTS',
+    );
+  }
+}
+
+export class UserNotFoundException extends BaseHttpException {
+  constructor() {
+    super(
+      { message: 'User not found', code: 'USER_NOT_FOUND' },
+      HttpStatus.NOT_FOUND,
+      'USER_NOT_FOUND',
+    );
+  }
+}
+
+export class InvalidCredentialsException extends BaseHttpException {
+  constructor() {
+    super(
+      { message: 'Invalid credentials', code: 'INVALID_CREDENTIALS' },
+      HttpStatus.UNAUTHORIZED,
+      'INVALID_CREDENTIALS',
+    );
   }
 }

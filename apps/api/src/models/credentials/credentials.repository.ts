@@ -24,4 +24,9 @@ export class CredentialsRepository extends BaseRepository<Credential> {
       data,
     });
   }
+
+  async update(params: Prisma.CredentialUpdateArgs, tx?: PrismaTransaction) {
+    const client = this.getDelegate(tx);
+    return client.credential.update(params);
+  }
 }

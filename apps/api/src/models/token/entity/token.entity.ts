@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber } from 'class-validator';
 
-export class JWTOutput {
+export class TokenEntity {
   @ApiProperty({
     description: 'Access token for authentication',
   })
@@ -14,5 +15,6 @@ export class JWTOutput {
   @ApiProperty({
     description: 'Token expiration time in seconds',
   })
-  expiresIn: string;
+  @IsNumber()
+  expiresIn: string | number;
 }

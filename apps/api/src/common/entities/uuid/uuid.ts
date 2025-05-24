@@ -1,7 +1,14 @@
 import { BadRequestException } from '@nestjs/common';
+import { ApiProperty } from '@nestjs/swagger';
 import { v4 as uuidv4, validate } from 'uuid';
 
 export class UUID {
+  @ApiProperty({
+    description: 'Unique identifier in UUID format',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    type: String,
+    required: true,
+  })
   private readonly _value: string;
 
   constructor(uid?: string) {

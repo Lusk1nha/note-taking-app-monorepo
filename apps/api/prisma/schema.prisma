@@ -44,6 +44,7 @@ model User {
   admin        Admin?
   authProvider AuthProvider?
   credential   Credential?
+  Session      Session[]
 
   @@map("users")
 }
@@ -53,4 +54,18 @@ enum AuthProviderType {
   CREDENTIALS
 
   @@map("auth_provider_type")
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  tokenHash String   @unique
+  revoked   Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("sessions")
 }
