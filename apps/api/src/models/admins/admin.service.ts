@@ -1,25 +1,25 @@
-import { Injectable, Logger } from '@nestjs/common'
-import { UUID } from 'src/common/entities/uuid/uuid'
-import { AdminsRepository } from './admins.repository'
-import { AdminEntity } from './entity/admins.entity'
+import { Injectable, Logger } from '@nestjs/common';
+import { UUID } from 'src/common/entities/uuid/uuid';
+import { AdminsRepository } from './admins.repository';
+import { AdminEntity } from './entity/admins.entity';
 
 @Injectable()
 export class AdminsService {
-	private readonly logger = new Logger(AdminsService.name)
+  private readonly logger = new Logger(AdminsService.name);
 
-	constructor(private readonly adminsRepository: AdminsRepository) {}
+  constructor(private readonly adminsRepository: AdminsRepository) {}
 
-	async findAdminByUserId(id: UUID): Promise<AdminEntity | null> {
-		const userId = id.value
+  async findAdminByUserId(id: UUID): Promise<AdminEntity | null> {
+    const userId = id.value;
 
-		const admin = await this.adminsRepository.findUnique(userId)
+    const admin = await this.adminsRepository.findUnique(userId);
 
-		if (!admin) {
-			this.logger.warn(`Admin with ID ${userId} not found`)
-			return null
-		}
+    if (!admin) {
+      this.logger.warn(`Admin with ID ${userId} not found`);
+      return null;
+    }
 
-		this.logger.log(`Admin with ID ${userId} found`)
-		return new AdminEntity(admin)
-	}
+    this.logger.log(`Admin with ID ${userId} found`);
+    return new AdminEntity(admin);
+  }
 }
