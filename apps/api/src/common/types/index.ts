@@ -1,18 +1,17 @@
-import { Role } from '../roles/roles.util'
+import { Role } from '../roles/roles.util';
 
 export type JWTDefaultValues = {
-	iss: string
-	aud: string
-	iat: number
-	exp: number
-	sub: string
-}
+  iss: string;
+  aud: string;
+  iat: number;
+  sub: string;
+};
 
-export interface CreateUserAuthType extends Omit<JWTDefaultValues, 'exp'> {
-	name?: string
+export interface CreateUserAuthType extends JWTDefaultValues {
+  name?: string;
 }
 
 export interface UserAuthType extends JWTDefaultValues {
-	name?: string
-	roles: Role[]
+  name?: string;
+  roles: Role[];
 }
