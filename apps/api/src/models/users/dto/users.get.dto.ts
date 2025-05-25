@@ -1,9 +1,9 @@
-import { UserEntity } from '../entity/user.entity';
+import { UserEntity } from '../entity/user.entity'
 
 export class CurrentUserOutput {
-  user: UserEntity;
+	user: UserEntity
 }
 
 export class AllUsersOutput {
-  users: UserEntity[];
+	users: UserEntity[]
 }
