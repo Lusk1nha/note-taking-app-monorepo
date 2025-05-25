@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth.decorator'
-import { Email } from 'src/common/entities/email'
+import { Email } from 'src/common/entities/email/email'
 import { Password } from 'src/common/entities/password/password'
 import { UUID } from 'src/common/entities/uuid/uuid'
 import { UserAuthType } from 'src/common/types'

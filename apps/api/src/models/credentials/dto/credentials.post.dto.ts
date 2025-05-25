@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Transform } from 'class-transformer'
 import { IsEmail, IsString, MinLength } from 'class-validator'
-import { Email } from 'src/common/entities/email'
+import { Email } from 'src/common/entities/email/email'
 import { Password } from 'src/common/entities/password/password'
 import { UUID } from 'src/common/entities/uuid/uuid'
 

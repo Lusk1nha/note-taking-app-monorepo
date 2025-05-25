@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Credential } from '@prisma/client'
 import { IsDate, IsEmail, IsString } from 'class-validator'
-import { Email } from 'src/common/entities/email'
+import { Email } from 'src/common/entities/email/email'
 import { UUID } from 'src/common/entities/uuid/uuid'
 
 export class CredentialsEntity {

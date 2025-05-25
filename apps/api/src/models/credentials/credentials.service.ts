@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common'
-import { Email } from 'src/common/entities/email'
+import { Email } from 'src/common/entities/email/email'
 import { Password } from 'src/common/entities/password/password'
 import { UUID } from 'src/common/entities/uuid/uuid'
 import { PrismaService } from 'src/common/prisma/prisma.service'
