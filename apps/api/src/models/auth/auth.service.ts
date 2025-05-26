@@ -11,13 +11,13 @@ import { UserEntity } from '../users/entity/user.entity';
 import {
   InvalidCredentialsException,
   UserAlreadyExistsException,
-  UserCannotLogoutAnotherUserException,
   UserNotFoundException,
 } from './errors/auth.errors';
 
 import { Password } from 'src/common/entities/password/password';
 import { UUID } from 'src/common/entities/uuid/uuid';
 import { TokenService } from '../token/token.service';
+import { AuthValidators } from './auth.validators';
 
 @Injectable()
 export class AuthService {
@@ -32,34 +32,11 @@ export class AuthService {
   ) {}
 
   async signUp(email: Email, password: Password): Promise<UserEntity> {
-    const existingCredential = await this.credentialsService.findByEmail(email);
+    await this.validateUniqueEmail(email);
 
-    if (existingCredential) {
-      throw new UserAlreadyExistsException();
-    }
-
-    return await this.prisma.$transaction(async (tx: PrismaTransaction) => {
-      const user = await this.usersService.createUser(tx);
-
-      await this.credentialsService.createCredential(
-        {
-          userId: user.id,
-          email,
-          password,
-        },
-        tx,
-      );
-
-      await this.authProviderService.createAuthProvider(
-        {
-          userId: user.id,
-          providerType: AuthProviderType.CREDENTIALS,
-        },
-        tx,
-      );
-
-      this.logger.log(`User ${user.id} registered successfully`);
-
+    return this.prisma.$transaction(async (tx: PrismaTransaction) => {
+      const user = await this.createUserWithCredentials(tx, email, password);
+      this.logger.log(`User registered successfully: ${user.id.value}`);
       return user;
     });
   }
@@ -68,62 +45,83 @@ export class AuthService {
     const credential = await this.credentialsService.findByEmail(email);
 
     if (!credential) {
-      throw new InvalidCredentialsException(); // Prevent user enumeration
-    }
-
-    const isValid = await this.credentialsService.validatePassword(email, password);
-
-    if (!isValid) {
+      this.logger.warn(`No credentials found for email: ${email.value}`);
       throw new InvalidCredentialsException();
     }
 
-    const user = await this.usersService.findById(credential.id);
+    await this.validatePassword(credential.email, password);
+    const user = await this.getValidatedUser(credential.userId);
 
-    if (!user) {
-      throw new UserNotFoundException();
-    }
-
-    return await this.tokenService.generateToken(user);
+    this.logger.log(`User logged in successfully: ${user.id.value}`);
+    return this.tokenService.generateToken(user);
   }
 
   async logout(userId: UUID, refreshToken: string) {
-    const claims = await this.tokenService.decodeRefreshToken(refreshToken);
-    const user = await this.usersService.findById(new UUID(claims.sub));
-
-    if (!user) {
-      throw new UserNotFoundException();
-    }
-
-    if (!userId.equals(user.id)) {
-      throw new UserCannotLogoutAnotherUserException();
-    }
-
+    await this.validateTokenAndOwnership(refreshToken, userId);
     return await this.tokenService.revokeToken(refreshToken);
   }
 
   async logoutAll(userId: UUID, refreshToken: string) {
-    const claims = await this.tokenService.decodeRefreshToken(refreshToken);
-    const user = await this.usersService.findById(new UUID(claims.sub));
-
-    if (!user) {
-      throw new UserNotFoundException();
-    }
-
-    if (!userId.equals(user.id)) {
-      throw new UserCannotLogoutAnotherUserException();
-    }
-
+    const { user } = await this.validateTokenAndOwnership(refreshToken, userId);
     return await this.tokenService.revokeAllTokens(user);
   }
 
   async revalidateToken(token: string) {
-    const claims = await this.tokenService.decodeRefreshToken(token);
-    const user = await this.usersService.findById(new UUID(claims.sub));
+    const { user } = await this.validateTokenOwnership(token);
+    return this.tokenService.revalidateRefreshToken(user, token);
+  }
+
+  // Private Helpers
+  private async validateUniqueEmail(email: Email) {
+    if (await this.credentialsService.findByEmail(email)) {
+      this.logger.warn(`Email already exists: ${email.value}`);
+      throw new UserAlreadyExistsException();
+    }
+  }
+
+  private async createUserWithCredentials(tx: PrismaTransaction, email: Email, password: Password) {
+    const user = await this.usersService.createUser(tx);
+
+    await Promise.all([
+      this.credentialsService.createCredential({ userId: user.id, email, password }, tx),
+      this.authProviderService.createAuthProvider(
+        { userId: user.id, providerType: AuthProviderType.CREDENTIALS },
+        tx,
+      ),
+    ]);
+
+    return user;
+  }
+
+  private async validatePassword(email: Email, password: Password) {
+    if (!(await this.credentialsService.validatePassword(email, password))) {
+      this.logger.warn(`Invalid credentials for email: ${email.value}`);
+      throw new InvalidCredentialsException();
+    }
+  }
+
+  private async getValidatedUser(userId: UUID): Promise<UserEntity> {
+    const user = await this.usersService.findById(userId);
+    AuthValidators.validateExistingUser(user);
+
+    return user as UserEntity;
+  }
+
+  private async validateTokenAndOwnership(token: string, userId: UUID) {
+    const { user } = await this.validateTokenOwnership(token);
 
     if (!user) {
       throw new UserNotFoundException();
     }
 
-    return this.tokenService.revalidateRefreshTokens(user, token);
+    AuthValidators.validateUserOwnership(userId, user.id);
+
+    return { user };
+  }
+
+  private async validateTokenOwnership(token: string) {
+    const claims = await this.tokenService.validateRefreshToken(token);
+    const user = await this.getValidatedUser(new UUID(claims.sub));
+    return { user };
   }
 }

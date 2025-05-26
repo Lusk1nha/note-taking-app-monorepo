@@ -14,7 +14,7 @@ export class CacheRedisRepository {
     await this.redisClient.sadd(key, member);
   }
 
-  async expireSet(key: string, ttl: number): Promise<void> {
+  async expireKey(key: string, ttl: number): Promise<void> {
     await this.redisClient.expire(key, ttl);
   }
 

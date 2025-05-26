@@ -4,134 +4,114 @@ import { JwtService } from '@nestjs/jwt';
 import { createJWTPayload } from 'src/helpers/jwt';
 import { UserEntity } from '../users/entity/user.entity';
 
-import { InvalidTokenException } from './errors/token.errors';
+import { InvalidTokenException, MissingSecretException } from './errors/token.errors';
 
 import { createHmac } from 'crypto';
 import { CacheRedisRepository } from 'src/common/redis/cache-redis.repository';
-import { REDIS_KEYS } from './token.constants';
+import { REDIS_KEYS, TOKEN_CONFIG_KEYS, TOKEN_TYPES } from './token.constants';
+import { TokenType, SignedToken } from './token.types';
 
 @Injectable()
 export class TokenService {
   private readonly logger = new Logger(TokenService.name);
-  private readonly refreshTokenExpirationAsDays: number;
+  private readonly refreshTokenExpirationInSeconds: number;
 
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly redisRepository: CacheRedisRepository,
   ) {
-    this.refreshTokenExpirationAsDays = Number(configService.get('JWT_REFRESH_EXPIRATION'));
+    this.refreshTokenExpirationInSeconds = this.getRefreshTokenExpiration();
   }
 
   async generateToken(user: UserEntity) {
-    const { accessToken, refreshToken } = await this.generateTokens(user);
+    const tokens = await this.generateTokens(user);
+    const tokenHash = this.generateTokenHash(tokens.refreshToken.token);
 
-    const tokenHash = this.generateTokenHash(refreshToken.token);
-
-    await this.saveRefreshTokenInCache(user, tokenHash);
-
-    return { accessToken, refreshToken };
+    await this.saveRefreshToken(user, tokenHash);
+    return tokens;
   }
 
-  async revalidateRefreshTokens(user: UserEntity, previousToken: string) {
-    const previousTokenokenHash = this.generateTokenHash(previousToken);
-    const session = await this.getRefreshTokenFromCache(previousTokenokenHash);
+  async revalidateRefreshToken(user: UserEntity, previousToken: string) {
+    return this.handleTokenOperation('revalidation', previousToken, async (tokenHash) => {
+      await this.validateTokenOwnership(user, tokenHash);
+      await this.deleteRefreshToken(tokenHash);
 
-    if (!session || session !== user.id.value) {
-      this.logger.warn(`Invalid refresh token for user ${user.id.value}`);
-      throw new InvalidTokenException();
-    }
+      const newTokens = await this.generateTokens(user);
+      const newTokenHash = this.generateTokenHash(newTokens.refreshToken.token);
 
-    await this.deleteRefreshTokenFromCache(previousTokenokenHash);
-
-    const { accessToken, refreshToken } = await this.generateTokens(user);
-
-    const tokenHash = this.generateTokenHash(refreshToken.token);
-
-    await this.saveRefreshTokenInCache(user, tokenHash);
-
-    return { accessToken, refreshToken };
+      await this.saveRefreshToken(user, newTokenHash);
+      return newTokens;
+    });
   }
 
-  async decodeAccessToken(token: string) {
-    const secret = this.configService.get('JWT_SECRET');
-
-    if (!secret) {
-      throw new Error('JWT_SECRET is not defined');
-    }
-
-    try {
-      return await this.jwtService.verifyAsync(token, {
-        secret,
-        algorithms: ['HS256'],
-      });
-    } catch (error) {
-      this.logger.error(`Failed to decode access token: ${error.message}`);
-      throw new InvalidTokenException();
-    }
+  async revokeToken(token: string): Promise<void> {
+    return this.handleTokenOperation('revocation', token, async (tokenHash) => {
+      await this.deleteRefreshToken(tokenHash);
+    });
   }
 
-  async decodeRefreshToken(token: string) {
-    const secret = this.configService.get('JWT_REFRESH_SECRET');
-
-    if (!secret) {
-      throw new Error('JWT_REFRESH_SECRET is not defined');
-    }
-
-    try {
-      return await this.jwtService.verifyAsync(token, {
-        secret,
-        algorithms: ['HS256'],
-      });
-    } catch (error) {
-      this.logger.error(`Failed to decode refresh token: ${error.message}`);
-      throw new InvalidTokenException();
-    }
-  }
-
-  async revokeToken(token: string) {
-    const tokenHash = this.generateTokenHash(token);
-
-    const session = await this.getRefreshTokenFromCache(tokenHash);
-
-    if (!session) {
-      throw new InvalidTokenException();
-    }
-
-    await this.deleteRefreshTokenFromCache(tokenHash);
-    this.logger.log(`Revoked token for user ${session}`);
-  }
-
-  async revokeAllTokens(user: UserEntity) {
-    const userTokensKey = `${REDIS_KEYS.USER_TOKENS_PREFIX}:${user.id.value}`;
-
-    const tokens = await this.redisRepository.getMembersOfSet(userTokensKey);
+  async revokeAllTokens(user: UserEntity): Promise<void> {
+    const userTokensKey = this.getUserTokensKey(user.id.value);
+    const tokenHashes = await this.redisRepository.getMembersOfSet(userTokensKey);
 
     await Promise.all([
-      ...tokens.map((tokenHash) => this.deleteRefreshTokenFromCache(tokenHash)),
+      ...tokenHashes.map((hash) => this.deleteRefreshToken(hash)),
       this.redisRepository.deleteData(userTokensKey),
     ]);
 
     this.logger.log(`Revoked all tokens for user ${user.id.value}`);
   }
 
-  private generateRefreshTokenKey(tokenHash: string): string {
-    return `${REDIS_KEYS.REFRESH_TOKEN_PREFIX}:${tokenHash}`;
+  async validateAccessToken(token: string) {
+    return this.validateToken(token, TOKEN_CONFIG_KEYS.SECRET);
   }
 
-  private async saveRefreshTokenInCache(user: UserEntity, tokenHashed: string): Promise<void> {
-    const key = this.generateRefreshTokenKey(tokenHashed);
-    const userTokensKey = `${REDIS_KEYS.USER_TOKENS_PREFIX}:${user.id.value}`;
-    const expiresAtInSeconds = this.refreshTokenExpirationAsDays * 24 * 60 * 60;
+  async validateRefreshToken(token: string) {
+    return this.validateToken(token, TOKEN_CONFIG_KEYS.REFRESH_SECRET);
+  }
+
+  private async validateToken(token: string, secretKey: string) {
+    try {
+      const secret = this.getSecret(secretKey);
+      return await this.jwtService.verifyAsync(token, { secret, algorithms: ['HS256'] });
+    } catch (error) {
+      this.logger.error(`Token validation failed for ${secretKey}`, error.stack);
+      throw new InvalidTokenException();
+    }
+  }
+
+  private async validateTokenOwnership(user: UserEntity, tokenHash: string) {
+    const storedUserId = await this.getRefreshTokenFromCache(tokenHash);
+
+    if (storedUserId !== user.id.value) {
+      this.logger.warn(`Token ownership validation failed for user ${user.id.value}`);
+      throw new InvalidTokenException();
+    }
+  }
+
+  private generateRefreshTokenKey(tokenHash: string): string {
+    return `${REDIS_KEYS.REFRESH_TOKEN_PREFIX}${tokenHash}`;
+  }
+
+  private async saveRefreshToken(user: UserEntity, tokenHash: string) {
+    const refreshTokenKey = this.getRefreshTokenKey(tokenHash);
+    const userTokensKey = this.getUserTokensKey(user.id.value);
 
     await Promise.all([
-      this.redisRepository.saveData(key, user.id.value, expiresAtInSeconds),
-      this.redisRepository.addToSet(userTokensKey, tokenHashed),
-      this.redisRepository.expireSet(userTokensKey, expiresAtInSeconds), // Opcional: Expirar o conjunto
+      this.redisRepository.saveData(
+        refreshTokenKey,
+        user.id.value,
+        this.refreshTokenExpirationInSeconds,
+      ),
+      this.redisRepository.addToSet(userTokensKey, tokenHash),
+      this.redisRepository.expireKey(userTokensKey, this.refreshTokenExpirationInSeconds),
     ]);
+
+    this.logger.log(`Saved refresh token for user ${user.id.value}`);
   }
 
-  private async deleteRefreshTokenFromCache(tokenHashed: string): Promise<void> {
+  private async deleteRefreshToken(tokenHashed: string): Promise<void> {
     const key = this.generateRefreshTokenKey(tokenHashed);
     await this.redisRepository.deleteData(key);
   }
@@ -149,62 +129,68 @@ export class TokenService {
 
   private async generateTokens(user: UserEntity) {
     const [accessToken, refreshToken] = await Promise.all([
-      this.createAccessToken(user),
-      this.createRefreshToken(user),
+      this.createToken(user, TOKEN_TYPES.ACCESS),
+      this.createToken(user, TOKEN_TYPES.REFRESH),
     ]);
 
     return { accessToken, refreshToken };
   }
 
-  private async createRefreshToken(user: UserEntity) {
-    const secret = this.configService.get('JWT_REFRESH_SECRET');
-
-    if (!secret) {
-      throw new Error('JWT_REFRESH_SECRET is not defined');
-    }
-
-    return this.signToken(user, secret, '7d', 'refresh');
+  private getRefreshTokenKey(tokenHash: string): string {
+    return `${REDIS_KEYS.REFRESH_TOKEN_PREFIX}${tokenHash}`;
   }
 
-  private async createAccessToken(user: UserEntity) {
-    const secret = this.configService.get('JWT_SECRET');
-
-    if (!secret) {
-      throw new Error('JWT_SECRET is not defined');
-    }
-
-    return this.signToken(user, secret, '15m', 'access');
+  private getUserTokensKey(userId: string): string {
+    return `${REDIS_KEYS.USER_TOKENS_PREFIX}${userId}`;
   }
 
-  private async signToken(
-    user: UserEntity,
-    secret: string,
-    expiresIn: string | number,
-    type: string,
-  ) {
+  private generateTokenHash(token: string): string {
+    const hmacSecret = this.getSecret(TOKEN_CONFIG_KEYS.HMAC_SECRET);
+    return createHmac('sha256', hmacSecret).update(token).digest('hex');
+  }
+
+  private getSecret(key: string): string {
+    const secret = this.configService.get<string>(key);
+    if (!secret) throw new MissingSecretException(key);
+    return secret;
+  }
+
+  private getRefreshTokenExpiration(): number {
+    const days = Number(this.configService.get(TOKEN_CONFIG_KEYS.REFRESH_EXPIRATION));
+    return days * 24 * 60 * 60;
+  }
+
+  private async handleTokenOperation<T>(
+    operation: string,
+    token: string,
+    handler: (tokenHash: string) => Promise<T>,
+  ): Promise<T> {
+    const tokenHash = this.generateTokenHash(token);
+
+    try {
+      return await handler(tokenHash);
+    } catch (error) {
+      this.logger.error(`Failed ${operation} for token hash: ${tokenHash}`, error.stack);
+      throw new InvalidTokenException();
+    }
+  }
+
+  private async createToken(user: UserEntity, type: TokenType): Promise<SignedToken> {
+    const secretKey =
+      type === TOKEN_TYPES.ACCESS ? TOKEN_CONFIG_KEYS.SECRET : TOKEN_CONFIG_KEYS.REFRESH_SECRET;
+
+    const expiresIn = type === TOKEN_TYPES.ACCESS ? '15m' : '7d';
     const payload = createJWTPayload(user);
     const token = await this.jwtService.signAsync(payload, {
-      algorithm: 'HS256',
+      secret: this.getSecret(secretKey),
       expiresIn,
-      secret,
+      algorithm: 'HS256',
     });
-
-    this.logger.log(`Generated ${type} token for user ${user.id.value}`);
 
     return {
       tokenType: 'Bearer',
       token,
       expiresIn,
     };
-  }
-
-  private generateTokenHash(token: string): string {
-    const hmacSecret = this.configService.get('HMAC_SECRET');
-
-    if (!hmacSecret) {
-      throw new Error('HMAC_SECRET is not defined');
-    }
-
-    return createHmac('sha256', hmacSecret).update(token).digest('hex');
   }
 }

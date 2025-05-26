@@ -1,34 +1,38 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { Credential } from '@prisma/client'
-import { IsDate, IsEmail, IsString } from 'class-validator'
-import { Email } from 'src/common/entities/email/email'
-import { UUID } from 'src/common/entities/uuid/uuid'
+import { ApiProperty } from '@nestjs/swagger';
+import { Credential } from '@prisma/client';
+import { IsDate, IsEmail, IsString } from 'class-validator';
+import { Email } from 'src/common/entities/email/email';
+import { UUID } from 'src/common/entities/uuid/uuid';
 
 export class CredentialsEntity {
-	constructor(credential: Credential) {
-		this.id = new UUID(credential.id)
-		this.email = new Email(credential.email)
-		this.passwordHash = credential.passwordHash
-		this.createdAt = credential.createdAt
-		this.updatedAt = credential.updatedAt
-	}
+  constructor(credential: Credential) {
+    this.id = new UUID(credential.id);
+		this.userId = new UUID(credential.userId);
+    this.email = new Email(credential.email);
+    this.passwordHash = credential.passwordHash;
+    this.createdAt = credential.createdAt;
+    this.updatedAt = credential.updatedAt;
+  }
 
-	@ApiProperty()
-	id: UUID
+  @ApiProperty()
+  id: UUID;
 
-	@ApiProperty()
-	@IsEmail()
-	email: Email
+  @ApiProperty()
+  userId: UUID;
 
-	@ApiProperty()
-	@IsString()
-	passwordHash: string
+  @ApiProperty()
+  @IsEmail()
+  email: Email;
 
-	@ApiProperty()
-	@IsDate()
-	createdAt: Date
+  @ApiProperty()
+  @IsString()
+  passwordHash: string;
 
-	@ApiProperty()
-	@IsDate()
-	updatedAt: Date
+  @ApiProperty()
+  @IsDate()
+  createdAt: Date;
+
+  @ApiProperty()
+  @IsDate()
+  updatedAt: Date;
 }

@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
-import { TokenEntity } from 'src/models/token/entity/token.entity';
 
 import { UserEntity } from 'src/models/users/entity/user.entity';
 

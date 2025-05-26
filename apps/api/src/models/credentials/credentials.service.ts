@@ -1,114 +1,136 @@
-import { Injectable, Logger } from '@nestjs/common'
-import { Email } from 'src/common/entities/email/email'
-import { Password } from 'src/common/entities/password/password'
-import { UUID } from 'src/common/entities/uuid/uuid'
-import { PrismaService } from 'src/common/prisma/prisma.service'
-import { PrismaTransaction } from 'src/common/prisma/prisma.type'
-import { comparePassword, hashPassword } from 'src/helpers/hash'
-import { CredentialsRepository } from './credentials.repository'
-import { CreateCredentialsInput } from './dto/credentials.post.dto'
-import { CredentialsEntity } from './entity/credentials.entity'
+import { Injectable, Logger } from '@nestjs/common';
+import { Email } from 'src/common/entities/email/email';
+import { Password } from 'src/common/entities/password/password';
+import { UUID } from 'src/common/entities/uuid/uuid';
+import { PrismaService } from 'src/common/prisma/prisma.service';
+import { PrismaTransaction } from 'src/common/prisma/prisma.type';
+import { comparePassword, hashPassword } from 'src/helpers/hash';
+import { CredentialsRepository } from './credentials.repository';
+import { CreateCredentialsInput } from './dto/credentials.post.dto';
+import { CredentialsEntity } from './entity/credentials.entity';
 
 @Injectable()
 export class CredentialsService {
-	private readonly logger = new Logger(CredentialsService.name)
+  private readonly logger = new Logger(CredentialsService.name);
 
-	constructor(
-		private readonly prisma: PrismaService,
-		private readonly credentialsRepository: CredentialsRepository,
-	) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly credentialsRepository: CredentialsRepository,
+  ) {}
 
-	async findByEmail(email: Email): Promise<CredentialsEntity | null> {
-		const emailAsString = email.value
+  async findByUserId(userId: UUID): Promise<CredentialsEntity[]> {
+    const response = await this.credentialsRepository.findMany({
+      where: { userId: userId.value },
+    });
 
-		const response = await this.credentialsRepository.findUnique({
-			email: emailAsString,
-		})
+    return response.map((credential) => new CredentialsEntity(credential));
+  }
 
-		if (!response) {
-			return null
-		}
+  async findByEmail(email: Email): Promise<CredentialsEntity | null> {
+    const emailAsString = email.value;
 
-		return new CredentialsEntity(response)
-	}
+    const response = await this.credentialsRepository.findUnique({
+      email: emailAsString,
+    });
 
-	async createCredential(
-		data: CreateCredentialsInput,
-		tx?: PrismaTransaction,
-	): Promise<CredentialsEntity> {
-		const userIdAsString = data.userId.value
-		const emailAsString = data.email.value
-		const passwordHash = hashPassword(data.password.value)
+    if (!response) {
+      return null;
+    }
 
-		const credential = await this.credentialsRepository.create(
-			{
-				email: emailAsString,
-				passwordHash,
-				user: {
-					connect: {
-						id: userIdAsString,
-					},
-				},
-			},
-			tx,
-		)
+    return new CredentialsEntity(response);
+  }
 
-		this.logger.log(`Credential with ID ${credential.id} created`)
+  async createCredential(
+    data: CreateCredentialsInput,
+    tx?: PrismaTransaction,
+  ): Promise<CredentialsEntity> {
+    const userIdAsString = data.userId.value;
+    const emailAsString = data.email.value;
+    const passwordHash = hashPassword(data.password.value);
 
-		return new CredentialsEntity(credential)
-	}
+    const credential = await this.credentialsRepository.create(
+      {
+        email: emailAsString,
+        passwordHash,
+        id: new UUID().value,
+        user: {
+          connect: {
+            id: userIdAsString,
+          },
+        },
+      },
+      tx,
+    );
 
-	async updatePassword(userId: UUID, password: Password): Promise<void> {
-		await this.prisma.$transaction(async (tx: PrismaTransaction) => {
-			const id = userId.value
-			const newPasswordHash = hashPassword(password.value)
+    this.logger.log(`Credential with ID ${credential.id} created`);
 
-			await this.credentialsRepository.update(
-				{
-					where: {
-						id,
-					},
-					data: {
-						passwordHash: newPasswordHash,
-					},
-				},
-				tx,
-			)
-		})
+    return new CredentialsEntity(credential);
+  }
 
-		this.logger.log(`Password for user with ID ${userId.value} updated`)
-	}
+  async updatePassword(userId: UUID, password: Password): Promise<void> {
+    await this.prisma.$transaction(async (tx: PrismaTransaction) => {
+      const credentials = await this.findByUserId(userId);
 
-	async updateEmail(userId: UUID, email: Email): Promise<void> {
-		await this.prisma.$transaction(async (tx: PrismaTransaction) => {
-			const id = userId.value
-			const emailAsString = email.value
+      if (credentials.length === 0) {
+        this.logger.warn(`No credentials found for user with ID ${userId.value}`);
+        return;
+      }
 
-			await this.credentialsRepository.update(
-				{
-					where: {
-						id,
-					},
-					data: {
-						email: emailAsString,
-					},
-				},
-				tx,
-			)
-		})
+      const newPasswordHash = hashPassword(password.value);
+      const credential = credentials[0];
 
-		this.logger.log(`Email for user with ID ${userId.value} updated`)
-	}
+      await this.credentialsRepository.update(
+        {
+          where: {
+            id: credential.id.value,
+          },
+          data: {
+            passwordHash: newPasswordHash,
+          },
+        },
+        tx,
+      );
+    });
 
-	async validatePassword(email: Email, password: Password): Promise<boolean> {
-		const credentials = await this.findByEmail(email)
+    this.logger.log(`Password for user with ID ${userId.value} updated`);
+  }
 
-		if (!credentials) {
-			return false
-		}
+  async updateEmail(userId: UUID, newEmail: Email): Promise<void> {
+    await this.prisma.$transaction(async (tx: PrismaTransaction) => {
+      const credentials = await this.findByUserId(userId);
 
-		const isValid = await comparePassword(password.value, credentials.passwordHash)
+      if (credentials.length === 0) {
+        this.logger.warn(`No credentials found for user with ID ${userId.value}`);
+        return;
+      }
 
-		return isValid
-	}
+      const credential = credentials[0];
+
+      await this.credentialsRepository.update(
+        {
+          where: {
+            id: credential.id.value,
+          },
+          data: {
+            email: newEmail.value,
+          },
+        },
+        tx,
+      );
+    });
+
+    this.logger.log(`Email for user with ID ${userId.value} updated`);
+  }
+
+  async validatePassword(email: Email, password: Password): Promise<boolean> {
+    const credentials = await this.findByEmail(email);
+
+    if (!credentials) {
+      return false;
+    }
+
+    const isValid = await comparePassword(password.value, credentials.passwordHash);
+
+    return isValid;
+  }
 }
