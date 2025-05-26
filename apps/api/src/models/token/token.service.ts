@@ -4,92 +4,53 @@ import { JwtService } from '@nestjs/jwt';
 import { createJWTPayload } from 'src/helpers/jwt';
 import { UserEntity } from '../users/entity/user.entity';
 
-import { InvalidTokenException, TokenExpiredException } from './errors/token.errors';
-
-import { TokenRepository } from './token.repository';
+import { InvalidTokenException } from './errors/token.errors';
 
 import { createHmac } from 'crypto';
-import { PrismaService } from 'src/common/prisma/prisma.service';
+import { CacheRedisRepository } from 'src/common/redis/cache-redis.repository';
+import { REDIS_KEYS } from './token.constants';
 
 @Injectable()
 export class TokenService {
   private readonly logger = new Logger(TokenService.name);
-  private readonly refreshTokenExpiration: number;
-  private readonly accessTokenExpiration: number;
+  private readonly refreshTokenExpirationAsDays: number;
 
   constructor(
-    private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    private readonly tokenRepository: TokenRepository,
+    private readonly redisRepository: CacheRedisRepository,
   ) {
-    this.refreshTokenExpiration = Number(configService.get('JWT_REFRESH_EXPIRATION'));
-    this.accessTokenExpiration = Number(configService.get('JWT_EXPIRATION'));
+    this.refreshTokenExpirationAsDays = Number(configService.get('JWT_REFRESH_EXPIRATION'));
   }
 
   async generateToken(user: UserEntity) {
     const { accessToken, refreshToken } = await this.generateTokens(user);
 
-    const expiresAt = new Date(Date.now() + this.refreshTokenExpiration * 1000);
     const tokenHash = this.generateTokenHash(refreshToken.token);
 
-    await this.tokenRepository.create({
-      user: {
-        connect: {
-          id: user.id.value,
-        },
-      },
-      tokenHash,
-      expiresAt,
-    });
+    await this.saveRefreshTokenInCache(user, tokenHash);
 
     return { accessToken, refreshToken };
   }
 
   async revalidateRefreshTokens(user: UserEntity, previousToken: string) {
-    return this.prisma.$transaction(async (tx) => {
-      const tokenHash = this.generateTokenHash(previousToken);
+    const previousTokenokenHash = this.generateTokenHash(previousToken);
+    const session = await this.getRefreshTokenFromCache(previousTokenokenHash);
 
-      const session = await this.tokenRepository.findUnique({
-        tokenHash,
-        userId: user.id.value,
-        revoked: false,
-      });
+    if (!session || session !== user.id.value) {
+      this.logger.warn(`Invalid refresh token for user ${user.id.value}`);
+      throw new InvalidTokenException();
+    }
 
-      if (!session) {
-        throw new InvalidTokenException();
-      }
+    await this.deleteRefreshTokenFromCache(previousTokenokenHash);
 
-      await this.tokenRepository.update(
-        {
-          where: { id: session.id },
-          data: { revoked: true },
-        },
-        tx,
-      );
+    const { accessToken, refreshToken } = await this.generateTokens(user);
 
-      if (session.expiresAt < new Date()) {
-        throw new TokenExpiredException();
-      }
+    const tokenHash = this.generateTokenHash(refreshToken.token);
 
-      const { accessToken, refreshToken } = await this.generateTokens(user);
+    await this.saveRefreshTokenInCache(user, tokenHash);
 
-      await this.tokenRepository.create(
-        {
-          user: {
-            connect: {
-              id: user.id.value,
-            },
-          },
-          tokenHash: this.generateTokenHash(refreshToken.token),
-          expiresAt: new Date(Date.now() + this.refreshTokenExpiration * 1000),
-          revoked: false,
-        },
-        tx,
-      );
-
-      return { accessToken, refreshToken };
-    });
+    return { accessToken, refreshToken };
   }
 
   async decodeAccessToken(token: string) {
@@ -128,40 +89,62 @@ export class TokenService {
     }
   }
 
-  async revokeToken(user: UserEntity, token: string) {
-    return this.prisma.$transaction(async (tx) => {
-      const tokenHash = this.generateTokenHash(token);
+  async revokeToken(token: string) {
+    const tokenHash = this.generateTokenHash(token);
 
-      const session = await this.tokenRepository.findUnique({
-        tokenHash,
-        userId: user.id.value,
-        revoked: false,
-      });
+    const session = await this.getRefreshTokenFromCache(tokenHash);
 
-      if (!session) {
-        throw new InvalidTokenException();
-      }
+    if (!session) {
+      throw new InvalidTokenException();
+    }
 
-      await this.tokenRepository.update(
-        {
-          where: { id: session.id },
-          data: { revoked: true },
-        },
-        tx,
-      );
-    });
+    await this.deleteRefreshTokenFromCache(tokenHash);
+    this.logger.log(`Revoked token for user ${session}`);
   }
 
   async revokeAllTokens(user: UserEntity) {
-    return this.prisma.$transaction(async (tx) => {
-      await this.tokenRepository.updateMany(
-        {
-          where: { userId: user.id.value, revoked: false },
-          data: { revoked: true },
-        },
-        tx,
-      );
-    });
+    const userTokensKey = `${REDIS_KEYS.USER_TOKENS_PREFIX}:${user.id.value}`;
+
+    const tokens = await this.redisRepository.getMembersOfSet(userTokensKey);
+
+    await Promise.all([
+      ...tokens.map((tokenHash) => this.deleteRefreshTokenFromCache(tokenHash)),
+      this.redisRepository.deleteData(userTokensKey),
+    ]);
+
+    this.logger.log(`Revoked all tokens for user ${user.id.value}`);
+  }
+
+  private generateRefreshTokenKey(tokenHash: string): string {
+    return `${REDIS_KEYS.REFRESH_TOKEN_PREFIX}:${tokenHash}`;
+  }
+
+  private async saveRefreshTokenInCache(user: UserEntity, tokenHashed: string): Promise<void> {
+    const key = this.generateRefreshTokenKey(tokenHashed);
+    const userTokensKey = `${REDIS_KEYS.USER_TOKENS_PREFIX}:${user.id.value}`;
+    const expiresAtInSeconds = this.refreshTokenExpirationAsDays * 24 * 60 * 60;
+
+    await Promise.all([
+      this.redisRepository.saveData(key, user.id.value, expiresAtInSeconds),
+      this.redisRepository.addToSet(userTokensKey, tokenHashed),
+      this.redisRepository.expireSet(userTokensKey, expiresAtInSeconds), // Opcional: Expirar o conjunto
+    ]);
+  }
+
+  private async deleteRefreshTokenFromCache(tokenHashed: string): Promise<void> {
+    const key = this.generateRefreshTokenKey(tokenHashed);
+    await this.redisRepository.deleteData(key);
+  }
+
+  private async getRefreshTokenFromCache(tokenHashed: string): Promise<string | null> {
+    const key = this.generateRefreshTokenKey(tokenHashed);
+    const session = await this.redisRepository.getData<string>(key);
+
+    if (!session) {
+      return null;
+    }
+
+    return session;
   }
 
   private async generateTokens(user: UserEntity) {
@@ -217,6 +200,11 @@ export class TokenService {
 
   private generateTokenHash(token: string): string {
     const hmacSecret = this.configService.get('HMAC_SECRET');
+
+    if (!hmacSecret) {
+      throw new Error('HMAC_SECRET is not defined');
+    }
+
     return createHmac('sha256', hmacSecret).update(token).digest('hex');
   }
 }

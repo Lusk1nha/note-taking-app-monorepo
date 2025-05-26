@@ -98,7 +98,7 @@ export class AuthService {
       throw new UserCannotLogoutAnotherUserException();
     }
 
-    return await this.tokenService.revokeToken(user, refreshToken);
+    return await this.tokenService.revokeToken(refreshToken);
   }
 
   async logoutAll(userId: UUID, refreshToken: string) {

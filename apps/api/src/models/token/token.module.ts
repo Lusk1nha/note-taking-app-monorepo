@@ -1,10 +1,12 @@
-import { Module } from '@nestjs/common'
-import { TokenRepository } from './token.repository'
-import { TokenService } from './token.service'
+import { Module } from '@nestjs/common';
+
+import { TokenService } from './token.service';
+import { CacheRedisModule } from 'src/common/redis/cache-redis.module';
 
 @Module({
-	controllers: [],
-	providers: [TokenRepository, TokenService],
-	exports: [TokenService],
+  imports: [CacheRedisModule],
+  controllers: [],
+  providers: [TokenService],
+  exports: [TokenService],
 })
 export class TokenModule {}
