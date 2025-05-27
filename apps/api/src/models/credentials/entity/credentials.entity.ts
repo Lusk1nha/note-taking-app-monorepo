@@ -7,7 +7,7 @@ import { UUID } from 'src/common/entities/uuid/uuid';
 export class CredentialsEntity {
   constructor(credential: Credential) {
     this.id = new UUID(credential.id);
-		this.userId = new UUID(credential.userId);
+    this.userId = new UUID(credential.userId);
     this.email = new Email(credential.email);
     this.passwordHash = credential.passwordHash;
     this.createdAt = credential.createdAt;

@@ -9,7 +9,7 @@ export class NoTokenProvidedException extends BaseHttpException {
         code: 'NO_TOKEN_PROVIDED',
       },
       HttpStatus.UNAUTHORIZED,
-      'NO_TOKEN_PROVIDED',
+      'NO_TOKEN_PROVIDED'
     );
   }
 }
@@ -19,7 +19,7 @@ export class InvalidProvidedTokenException extends BaseHttpException {
     super(
       { message: 'Invalid token', code: 'INVALID_TOKEN' },
       HttpStatus.UNAUTHORIZED,
-      'INVALID_TOKEN',
+      'INVALID_TOKEN'
     );
   }
 }
@@ -29,7 +29,7 @@ export class ForbiddenResourceException extends BaseHttpException {
     super(
       { message: "You don't have permission to access this resource.", code: 'FORBIDDEN_RESOURCE' },
       HttpStatus.FORBIDDEN,
-      'FORBIDDEN_RESOURCE',
+      'FORBIDDEN_RESOURCE'
     );
   }
 }
@@ -39,7 +39,7 @@ export class UserWithoutRoleException extends BaseHttpException {
     super(
       { message: 'User does not have a role assigned', code: 'USER_WITHOUT_ROLE' },
       HttpStatus.FORBIDDEN,
-      'USER_WITHOUT_ROLE',
+      'USER_WITHOUT_ROLE'
     );
   }
 }
@@ -49,7 +49,7 @@ export class UserAlreadyExistsException extends BaseHttpException {
     super(
       { message: 'User already exists', code: 'USER_ALREADY_EXISTS' },
       HttpStatus.CONFLICT,
-      'USER_ALREADY_EXISTS',
+      'USER_ALREADY_EXISTS'
     );
   }
 }
@@ -59,7 +59,7 @@ export class UserNotFoundException extends BaseHttpException {
     super(
       { message: 'User not found', code: 'USER_NOT_FOUND' },
       HttpStatus.NOT_FOUND,
-      'USER_NOT_FOUND',
+      'USER_NOT_FOUND'
     );
   }
 }
@@ -69,7 +69,7 @@ export class UserCannotLogoutAnotherUserException extends BaseHttpException {
     super(
       { message: 'User cannot logout another user', code: 'USER_CANNOT_LOGOUT_ANOTHER_USER' },
       HttpStatus.FORBIDDEN,
-      'USER_CANNOT_LOGOUT_ANOTHER_USER',
+      'USER_CANNOT_LOGOUT_ANOTHER_USER'
     );
   }
 }
@@ -79,7 +79,7 @@ export class InvalidCredentialsException extends BaseHttpException {
     super(
       { message: 'Invalid credentials', code: 'INVALID_CREDENTIALS' },
       HttpStatus.UNAUTHORIZED,
-      'INVALID_CREDENTIALS',
+      'INVALID_CREDENTIALS'
     );
   }
 }
@@ -92,7 +92,7 @@ export class NoRefreshTokenProvidedException extends BaseHttpException {
         code: 'NO_REFRESH_TOKEN_PROVIDED',
       },
       HttpStatus.UNAUTHORIZED,
-      'NO_REFRESH_TOKEN_PROVIDED',
+      'NO_REFRESH_TOKEN_PROVIDED'
     );
   }
 }

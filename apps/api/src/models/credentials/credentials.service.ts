@@ -15,7 +15,7 @@ export class CredentialsService {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly credentialsRepository: CredentialsRepository,
+    private readonly credentialsRepository: CredentialsRepository
   ) {}
 
   async findByUserId(userId: UUID): Promise<CredentialsEntity[]> {
@@ -42,7 +42,7 @@ export class CredentialsService {
 
   async createCredential(
     data: CreateCredentialsInput,
-    tx?: PrismaTransaction,
+    tx?: PrismaTransaction
   ): Promise<CredentialsEntity> {
     const userIdAsString = data.userId.value;
     const emailAsString = data.email.value;
@@ -59,7 +59,7 @@ export class CredentialsService {
           },
         },
       },
-      tx,
+      tx
     );
 
     this.logger.log(`Credential with ID ${credential.id} created`);
@@ -88,7 +88,7 @@ export class CredentialsService {
             passwordHash: newPasswordHash,
           },
         },
-        tx,
+        tx
       );
     });
 
@@ -115,7 +115,7 @@ export class CredentialsService {
             email: newEmail.value,
           },
         },
-        tx,
+        tx
       );
     });
 

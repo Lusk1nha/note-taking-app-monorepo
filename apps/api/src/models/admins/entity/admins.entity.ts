@@ -6,7 +6,7 @@ import { UUID } from 'src/common/entities/uuid/uuid';
 export class AdminEntity {
   constructor(admin: Admin) {
     this.id = new UUID(admin.id);
-		this.userId = new UUID(admin.userId);
+    this.userId = new UUID(admin.userId);
     this.createdAt = admin.createdAt;
   }
 

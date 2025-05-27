@@ -1,22 +1,22 @@
-import { PrismaClient } from '@prisma/client'
-import { users } from './data'
+import { PrismaClient } from '@prisma/client';
+import { users } from './data';
 
-let prisma
+let prisma;
 
 async function main() {
-	prisma = new PrismaClient()
+  prisma = new PrismaClient();
 
-	for (let user of users) {
-		await prisma.user.create({
-			data: user,
-		})
-	}
+  for (let user of users) {
+    await prisma.user.create({
+      data: user,
+    });
+  }
 }
 
 main()
-	.catch((e) => {
-		throw e
-	})
-	.finally(async () => {
-		await prisma.$disconnect()
-	})
+  .catch((e) => {
+    throw e;
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

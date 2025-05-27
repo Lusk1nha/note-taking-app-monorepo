@@ -1,8 +1,8 @@
+import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { HealthCheckOutput } from './dto/health.get.dto';
-import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class HealthService {
@@ -13,7 +13,7 @@ export class HealthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
-    private readonly mailerService: MailerService,
+    private readonly mailerService: MailerService
   ) {
     this.serviceName = this.configService.get<string>('SERVICE_NAME', 'API Service');
     this.serviceVersion = this.configService.get<string>('SERVICE_VERSION', '1.0.0');

@@ -28,7 +28,7 @@ export class AuthService {
     private readonly tokenService: TokenService,
     private readonly authProviderService: AuthProviderService,
     private readonly credentialsService: CredentialsService,
-    private readonly usersService: UsersService,
+    private readonly usersService: UsersService
   ) {}
 
   async signUp(email: Email, password: Password): Promise<UserEntity> {
@@ -86,7 +86,7 @@ export class AuthService {
       this.credentialsService.createCredential({ userId: user.id, email, password }, tx),
       this.authProviderService.createAuthProvider(
         { userId: user.id, providerType: AuthProviderType.CREDENTIALS },
-        tx,
+        tx
       ),
     ]);
 

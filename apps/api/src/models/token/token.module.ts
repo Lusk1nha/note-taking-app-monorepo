@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { TokenService } from './token.service';
 import { CacheRedisModule } from 'src/common/redis/cache-redis.module';
+import { TokenService } from './token.service';
 
 @Module({
   imports: [CacheRedisModule],

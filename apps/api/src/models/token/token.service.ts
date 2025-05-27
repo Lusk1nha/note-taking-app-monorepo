@@ -9,7 +9,7 @@ import { InvalidTokenException, MissingSecretException } from './errors/token.er
 import { createHmac } from 'crypto';
 import { CacheRedisRepository } from 'src/common/redis/cache-redis.repository';
 import { REDIS_KEYS, TOKEN_CONFIG_KEYS, TOKEN_TYPES } from './token.constants';
-import { TokenType, SignedToken } from './token.types';
+import { SignedToken, TokenType } from './token.types';
 
 @Injectable()
 export class TokenService {
@@ -19,7 +19,7 @@ export class TokenService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    private readonly redisRepository: CacheRedisRepository,
+    private readonly redisRepository: CacheRedisRepository
   ) {
     this.refreshTokenExpirationInSeconds = this.getRefreshTokenExpiration();
   }
@@ -102,7 +102,7 @@ export class TokenService {
       this.redisRepository.saveData(
         refreshTokenKey,
         user.id.value,
-        this.refreshTokenExpirationInSeconds,
+        this.refreshTokenExpirationInSeconds
       ),
       this.redisRepository.addToSet(userTokensKey, tokenHash),
       this.redisRepository.expireKey(userTokensKey, this.refreshTokenExpirationInSeconds),
@@ -163,7 +163,7 @@ export class TokenService {
   private async handleTokenOperation<T>(
     operation: string,
     token: string,
-    handler: (tokenHash: string) => Promise<T>,
+    handler: (tokenHash: string) => Promise<T>
   ): Promise<T> {
     const tokenHash = this.generateTokenHash(token);
 

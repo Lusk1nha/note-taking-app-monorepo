@@ -1,3 +1,3 @@
-import { SVGProps } from 'react'
+import { SVGProps } from 'react';
 
-export type SVGElementProps = SVGProps<SVGSVGElement>
+export type SVGElementProps = SVGProps<SVGSVGElement>;

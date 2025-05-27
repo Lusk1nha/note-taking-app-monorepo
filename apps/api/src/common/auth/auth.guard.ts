@@ -24,7 +24,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     private readonly rolesService: RolesService,
     private readonly tokenService: TokenService,
-    private readonly reflector: Reflector,
+    private readonly reflector: Reflector
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -55,7 +55,7 @@ export class AuthGuard implements CanActivate {
 
   private async _authorizeUser(
     request: RequestWithAuthExtensions,
-    context: ExecutionContext,
+    context: ExecutionContext
   ): Promise<boolean> {
     const userId = request.user.sub;
 

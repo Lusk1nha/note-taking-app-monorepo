@@ -22,7 +22,7 @@ export class EmailsController {
   @AllowAuthenticated(Role.Admin)
   async testSendEmail(
     @GetUser() currentUser: UserAuthType,
-    @Body() payload: CreateEmailInput,
+    @Body() payload: CreateEmailInput
   ): Promise<CreateEmailOutput> {
     const userId = new UUID(currentUser.sub);
 

@@ -6,7 +6,7 @@ export class InvalidJwtConfigException extends BaseHttpException {
     super(
       { message: 'User already exists', code: 'USER_ALREADY_EXISTS' },
       HttpStatus.CONFLICT,
-      'USER_ALREADY_EXISTS',
+      'USER_ALREADY_EXISTS'
     );
   }
 }
@@ -16,7 +16,7 @@ export class InvalidTokenException extends BaseHttpException {
     super(
       { message: 'Invalid token', code: 'INVALID_TOKEN' },
       HttpStatus.UNAUTHORIZED,
-      'INVALID_TOKEN',
+      'INVALID_TOKEN'
     );
   }
 }
@@ -26,7 +26,7 @@ export class TokenExpiredException extends BaseHttpException {
     super(
       { message: 'Token expired', code: 'TOKEN_EXPIRED' },
       HttpStatus.UNAUTHORIZED,
-      'TOKEN_EXPIRED',
+      'TOKEN_EXPIRED'
     );
   }
 }
@@ -36,7 +36,7 @@ export class MissingSecretException extends BaseHttpException {
     super(
       { message: `Missing secret: ${secret}`, code: 'MISSING_SECRET' },
       HttpStatus.INTERNAL_SERVER_ERROR,
-      'MISSING_SECRET',
+      'MISSING_SECRET'
     );
   }
 }

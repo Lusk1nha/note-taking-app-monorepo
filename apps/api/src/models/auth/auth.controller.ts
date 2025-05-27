@@ -1,9 +1,13 @@
 import { Body, Controller, Post, Res } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AllowAuthenticated, GetUser } from 'src/common/auth/auth.decorator';
 import { Cookies } from 'src/common/cookies/cookies.decorator';
 import { Email } from 'src/common/entities/email/email';
 import { Password } from 'src/common/entities/password/password';
+import { UUID } from 'src/common/entities/uuid/uuid';
+import { UserAuthType } from 'src/common/types';
 import { TokenEntity } from '../token/entity/token.entity';
+import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 import {
   LoginRequestInput,
@@ -11,10 +15,6 @@ import {
   RegisterResponseOutput,
 } from './dto/auth.post.dto';
 import { NoRefreshTokenProvidedException, UserNotFoundException } from './errors/auth.errors';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth.decorator';
-import { UserAuthType } from 'src/common/types';
-import { UsersService } from '../users/users.service';
-import { UUID } from 'src/common/entities/uuid/uuid';
 
 @Controller('auth')
 @ApiTags('Authentication')
@@ -45,7 +45,7 @@ export class AuthController {
   })
   async login(
     @Res({ passthrough: true }) response,
-    @Body() payload: LoginRequestInput,
+    @Body() payload: LoginRequestInput
   ): Promise<TokenEntity> {
     const email = new Email(payload.email);
     const password = new Password(payload.password);
@@ -71,7 +71,7 @@ export class AuthController {
   async logout(
     @Res({ passthrough: true }) response,
     @GetUser() currentUser: UserAuthType,
-    @Cookies('refreshToken') refreshToken?: string,
+    @Cookies('refreshToken') refreshToken?: string
   ): Promise<void> {
     if (!refreshToken) {
       throw new NoRefreshTokenProvidedException();
@@ -98,7 +98,7 @@ export class AuthController {
   async logoutAll(
     @Res({ passthrough: true }) response,
     @GetUser() currentUser: UserAuthType,
-    @Cookies('refreshToken') refreshToken?: string,
+    @Cookies('refreshToken') refreshToken?: string
   ): Promise<void> {
     if (!refreshToken) {
       throw new NoRefreshTokenProvidedException();
@@ -124,7 +124,7 @@ export class AuthController {
   })
   async revalidateToken(
     @Res({ passthrough: true }) response,
-    @Cookies('refreshToken') refreshToken?: string,
+    @Cookies('refreshToken') refreshToken?: string
   ): Promise<TokenEntity> {
     if (!refreshToken) {
       throw new NoRefreshTokenProvidedException();
