@@ -33,7 +33,7 @@ model Credential {
   userId       String   @db.VarChar(255)
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt    DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   @@index([userId], name: "credentials_userId_idx")
   @@map("credentials")
@@ -44,10 +44,13 @@ model User {
   name         String?        @db.VarChar(100)
   image        String?
   createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt    DateTime       @default(now()) @map("updated_at") @db.Timestamptz(6)
+  updatedAt    DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
   admin        Admin[]
   authProvider AuthProvider[]
   credential   Credential[]
+  Tags         Tag[]
+  Note         Note[]
+  NoteTag      NoteTag[]
 
   @@map("users")
 }
@@ -59,10 +62,53 @@ enum AuthProviderType {
   @@map("auth_provider_type")
 }
 
-enum EmailStatus {
-  SENT
-  FAILED
-  PENDING
+model Tag {
+  id   String @id @db.VarChar(255)
+  name String @db.VarChar(255)
 
-  @@map("email_status")
+  userId String @db.VarChar(255)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  NoteTag NoteTag[]
+
+  @@unique([name, userId], name: "tag_name_userId_unique")
+  @@map("tags")
+}
+
+model Note {
+  id      String @id @db.VarChar(255)
+  title   String @db.VarChar(255)
+  content String @db.Text
+
+  userId String @db.VarChar(255)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  NoteTag NoteTag[]
+
+  @@unique([title, userId], name: "note_title_userId_unique")
+  @@index([userId], name: "notes_userId_idx")
+  @@map("notes")
+}
+
+model NoteTag {
+  noteId String @db.VarChar(255)
+  tagId  String @db.VarChar(255)
+  userId String @db.VarChar(255)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  note Note @relation(fields: [noteId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@id([noteId, tagId])
+  @@index([noteId], name: "note_tag_noteId_idx")
+  @@index([tagId], name: "note_tag_tagId_idx")
+  @@map("note_tags")
 }

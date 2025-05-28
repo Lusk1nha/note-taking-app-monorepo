@@ -1,7 +1,20 @@
 import { BadRequestException } from '@nestjs/common';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class Email {
+interface IEmail {
+  value: string;
+  equals(other: Email): boolean;
+}
+
+export class Email implements IEmail {
   private static readonly EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  @ApiProperty({
+    description: 'User email address',
+    example: 'example@test.com',
+    type: String,
+    required: true,
+  })
   private readonly _value: string;
 
   constructor(email: string) {

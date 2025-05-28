@@ -18,6 +18,9 @@ import { RolesModule } from '../roles/roles.module';
 import { TokenModule } from '../token/token.module';
 
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { NotesModule } from '../notes/notes.module';
+import { TagsModule } from '../tags/tags.module';
+import { NotesTagsModule } from '../notes-tags/notes-tags.module';
 
 @Module({
   imports: [
@@ -62,6 +65,9 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
     AuthModule,
     AdminsModule,
     RolesModule,
+    NotesModule,
+    TagsModule,
+    NotesTagsModule,
     EmailsModule,
     TokenModule,
   ],

@@ -4,8 +4,12 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { HealthCheckOutput } from './dto/health.get.dto';
 
+interface IHealthService {
+  getHealthCheck(): Promise<HealthCheckOutput>;
+}
+
 @Injectable()
-export class HealthService {
+export class HealthService implements IHealthService {
   private readonly logger = new Logger(HealthService.name);
   private readonly serviceName: string;
   private readonly serviceVersion: string;

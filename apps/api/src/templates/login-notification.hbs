@@ -1,0 +1,232 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <title>New Login Detected | Note Taking App</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f5f7fa; /* --color-system-neutral-50 */
+        font-family:
+          'Inter',
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          Roboto,
+          sans-serif;
+        color: #232530; /* --color-system-neutral-800 */
+        line-height: 1.5;
+      }
+
+      .email-container {
+        max-width: 600px;
+        margin: 32px auto;
+        background-color: #ffffff; /* --color-system-neutral-0 */
+        border-radius: 16px; /* --radius-16 */
+        box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.06); /* --shadow-large */
+        overflow: hidden;
+      }
+
+      .header {
+        background-color: #ffffff; /* --color-system-neutral-0 */
+        padding: 32px; /* --spacing-400 */
+        text-align: center;
+        border-bottom: 1px solid #e0e4ea; /* --color-system-neutral-200 */
+      }
+
+      .header-logo {
+        color: #335cff; /* --color-system-blue-500 */
+        font-size: 24px; /* --text-preset-1 */
+        font-weight: 700;
+        margin: 0 0 16px 0;
+      }
+
+      .security-alert {
+        background-color: #ffd5d8; /* --color-system-red-100 */
+        border-left: 4px solid #fb3748; /* --color-system-red-500 */
+        padding: 16px; /* --spacing-200 */
+        border-radius: 0 8px 8px 0; /* --radius-8 */
+        margin: 0 0 24px 0; /* --spacing-300 */
+        display: flex;
+        align-items: center;
+        gap: 12px; /* --spacing-150 */
+      }
+
+      .alert-icon {
+        color: #fb3748; /* --color-system-red-500 */
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .content {
+        padding: 0 32px 32px; /* --spacing-400 */
+      }
+
+      .title {
+        font-size: 20px; /* --text-preset-2 */
+        line-height: 24px; /* --text-preset-2--line-height */
+        letter-spacing: -0.5px; /* --text-preset-2--letter-spacing */
+        font-weight: 700; /* --text-preset-2--font-weight */
+        margin-top: 0;
+        margin-bottom: 24px; /* --spacing-300 */
+      }
+
+      p {
+        font-size: 14px; /* --text-preset-4 */
+        line-height: 16.8px; /* --text-preset-4--line-height */
+        letter-spacing: -0.2px; /* --text-preset-4--letter-spacing */
+        font-weight: 500; /* --text-preset-4--font-weight */
+        color: #525866; /* --color-system-neutral-600 */
+        margin-bottom: 16px; /* --spacing-200 */
+      }
+
+      .info-card {
+        background-color: #f5f7fa; /* --color-system-neutral-50 */
+        border-radius: 8px; /* --radius-8 */
+        padding: 16px; /* --spacing-200 */
+        margin: 24px 0; /* --spacing-300 */
+      }
+
+      .info-row {
+        display: flex;
+        margin-bottom: 12px; /* --spacing-150 */
+      }
+
+      .info-label {
+        font-weight: 600;
+        color: #2b303b; /* --color-system-neutral-700 */
+        min-width: 120px;
+      }
+
+      .info-value {
+        font-weight: 500;
+        color: #525866; /* --color-system-neutral-600 */
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 16px; /* --spacing-200 */
+        margin-top: 32px; /* --spacing-400 */
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        display: inline-block;
+        text-decoration: none;
+        padding: 12px 24px; /* --spacing-150 --spacing-300 */
+        border-radius: 8px; /* --radius-8 */
+        font-size: 14px; /* --text-preset-4 */
+        font-weight: 600; /* --text-preset-4--font-weight */
+        transition: all 0.2s ease;
+        text-align: center;
+        flex: 1;
+        min-width: 150px;
+      }
+
+      .btn-primary {
+        background-color: #335cff; /* --color-system-blue-500 */
+        color: #ffffff !important;
+      }
+
+      .btn-primary:hover {
+        background-color: #2547d0; /* --color-system-blue-700 */
+      }
+
+      .btn-secondary {
+        background-color: #f5f7fa; /* --color-system-neutral-50 */
+        color: #525866 !important; /* --color-system-neutral-600 */
+        border: 1px solid #e0e4ea; /* --color-system-neutral-200 */
+      }
+
+      .btn-secondary:hover {
+        background-color: #e0e4ea; /* --color-system-neutral-200 */
+      }
+
+      .footer {
+        padding: 24px 32px; /* --spacing-300 --spacing-400 */
+        background-color: #f5f7fa; /* --color-system-neutral-50 */
+        text-align: center;
+        font-size: 12px; /* --text-preset-6 */
+        line-height: 14.4px; /* --text-preset-6--line-height */
+        color: #717784; /* --color-system-neutral-500 */
+        border-top: 1px solid #e0e4ea; /* --color-system-neutral-200 */
+      }
+
+      .footer-links {
+        margin-top: 8px; /* --spacing-100 */
+      }
+
+      .footer-links a {
+        color: #335cff; /* --color-system-blue-500 */
+        text-decoration: none;
+        margin: 0 8px; /* --spacing-100 */
+      }
+
+      @media (max-width: 620px) {
+        .email-container {
+          margin: 16px; /* --spacing-200 */
+          border-radius: 12px; /* --radius-12 */
+        }
+
+        .header,
+        .content {
+          padding: 24px; /* --spacing-300 */
+        }
+
+        .action-buttons {
+          flex-direction: column;
+          gap: 12px; /* --spacing-150 */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class='email-container'>
+      <div class='header'>
+        <div class='header-logo'>Note Taking App</div>
+        <div class='security-alert'>
+          <div class='alert-icon'>!</div>
+          <div>Security alert: New login detected</div>
+        </div>
+      </div>
+
+      <div class='content'>
+        <h2 class='title'>New access to your account</h2>
+
+        <p>We detected a new login to your Note Taking App account. See details below:</p>
+
+        <div class='info-card'>
+          <div class='info-row'>
+            <span class='info-label'>Account:</span>
+            <span class='info-value'>{{email}}</span>
+          </div>
+          <div class='info-row'>
+            <span class='info-label'>Date & time:</span>
+            <span class='info-value'>{{loginTime}}</span>
+          </div>
+        </div>
+
+        <p>If you recognize this activity, no action is required.</p>
+
+        <p><strong>Wasn't you?</strong> Your account may be compromised. We recommend:</p>
+        <ol>
+          <li>Change your password immediately</li>
+          <li>Review suspicious activity</li>
+          <li>Enable two-factor authentication</li>
+        </ol>
+
+        <div class='action-buttons'>
+          <a href='{{accountSettingsUrl}}' class='btn btn-primary'>Review Activity</a>
+          <a href='{{passwordResetUrl}}' class='btn btn-secondary'>Change Password</a>
+        </div>
+      </div>
+
+      <div class='footer'>
+        <p>This is an automated security notification. For security reasons, please don't reply to
+          this email.</p>
+        <p>© {{currentYear}} Note Taking App. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>

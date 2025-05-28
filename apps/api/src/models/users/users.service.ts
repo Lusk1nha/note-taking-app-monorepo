@@ -9,17 +9,25 @@ import { UpdateUserInput } from './dto/users.patch.dto';
 import { UserEntity } from './entity/user.entity';
 import { UserNotFoundException } from './errors/users.errors';
 
+interface IUsersService {
+  findById(id: UUID): Promise<UserEntity | null>;
+  findAll(): Promise<UserEntity[]>;
+  createUser(tx?: PrismaTransaction): Promise<UserEntity>;
+  updateUser(userId: UUID, payload: UpdateUserInput, tx?: PrismaTransaction): Promise<UserEntity>;
+  deleteUser(userId: UUID): Promise<void>;
+}
+
 @Injectable()
-export class UsersService {
+export class UsersService implements IUsersService {
   private readonly logger = new Logger(UsersService.name);
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly usersRepository: UsersRepository
+    private readonly repository: UsersRepository
   ) {}
 
   async findById(id: UUID): Promise<UserEntity | null> {
-    const user = await this.usersRepository.findUnique({
+    const user = await this.repository.findUnique({
       id: id.value,
     });
 
@@ -31,14 +39,14 @@ export class UsersService {
   }
 
   async findAll(): Promise<UserEntity[]> {
-    const users = await this.usersRepository.findMany();
+    const users = await this.repository.findMany();
     return users.map((user) => new UserEntity(user));
   }
 
   async createUser(tx?: PrismaTransaction): Promise<UserEntity> {
     const userId = new UUID();
 
-    const response = await this.usersRepository.create(
+    const response = await this.repository.create(
       {
         id: userId.value,
       },
@@ -55,7 +63,7 @@ export class UsersService {
     payload: UpdateUserInput,
     tx?: PrismaTransaction
   ): Promise<UserEntity> {
-    const user = await this.usersRepository.update(
+    const user = await this.repository.update(
       userId.value,
       {
         name: payload.name,
@@ -74,7 +82,7 @@ export class UsersService {
 
   async deleteUser(userId: UUID): Promise<void> {
     await this.prisma.$transaction(async (tx) => {
-      await this.usersRepository.delete(userId.value, tx);
+      await this.repository.delete(userId.value, tx);
     });
 
     this.logger.log(`User with ID ${userId.value} deleted`);

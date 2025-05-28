@@ -1,7 +1,20 @@
 import { BadRequestException } from '@nestjs/common';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class Password {
+interface IPassword {
+  value: string;
+  equals(other: Password): boolean;
+}
+
+export class Password implements IPassword {
   private static readonly PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+
+  @ApiProperty({
+    description: 'User password',
+    example: 'StrongPassword123',
+    type: String,
+    required: true,
+  })
   private readonly _value: string;
 
   constructor(password: string) {

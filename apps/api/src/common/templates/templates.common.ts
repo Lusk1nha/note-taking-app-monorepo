@@ -1,5 +1,13 @@
-export const TEMPLATES_NAMES = {
-  REGISTER: 'register',
-} as const;
+import { TemplatesNamesType, TemplateSettings, TEMPLATES_NAMES } from './templates.types';
 
-export type TEMPLATES_NAMES_TYPE = (typeof TEMPLATES_NAMES)[keyof typeof TEMPLATES_NAMES];
+export const TEMPLATES_SETTINGS: Record<TemplatesNamesType, TemplateSettings> = {
+  [TEMPLATES_NAMES.REGISTER]: {
+    subject: 'Welcome to Our Service',
+    defaultContext: {
+      companyName: 'Our Company',
+    },
+  },
+  [TEMPLATES_NAMES.LOGIN_NOTIFICATION]: {
+    subject: 'Login Notification',
+  },
+};

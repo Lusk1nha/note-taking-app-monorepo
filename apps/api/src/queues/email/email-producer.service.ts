@@ -1,10 +1,14 @@
 import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable, Logger } from '@nestjs/common';
 import { Job, Queue } from 'bullmq';
-import { EmailQueueData, EmailQueueEntity } from './entity/email-queue.entity';
+import { EmailQueueEntity } from './entity/email-queue.entity';
+
+interface IEmailProducerService {
+  sendEmail(payload: EmailQueueEntity): Promise<Job<EmailQueueEntity>>;
+}
 
 @Injectable()
-export class EmailProducerService {
+export class EmailProducerService implements IEmailProducerService {
   private readonly logger = new Logger(EmailProducerService.name);
 
   constructor(@InjectQueue('emailQueue') private readonly queue: Queue) {}

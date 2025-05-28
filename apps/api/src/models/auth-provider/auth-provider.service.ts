@@ -5,11 +5,18 @@ import { AuthProviderRepository } from './auth-provider.repository';
 import { CreateAuthProviderInput } from './dto/auth-provider.post.dto';
 import { AuthProviderEntity } from './entity/auth-provider.entity';
 
+interface IAuthProviderService {
+  createAuthProvider(
+    payload: CreateAuthProviderInput,
+    tx?: PrismaTransaction
+  ): Promise<AuthProviderEntity>;
+}
+
 @Injectable()
-export class AuthProviderService {
+export class AuthProviderService implements IAuthProviderService {
   private readonly logger = new Logger(AuthProviderService.name);
 
-  constructor(private readonly authProviderRepository: AuthProviderRepository) {}
+  constructor(private readonly repository: AuthProviderRepository) {}
 
   async createAuthProvider(
     payload: CreateAuthProviderInput,
@@ -17,7 +24,7 @@ export class AuthProviderService {
   ): Promise<AuthProviderEntity> {
     const userId = payload.userId.value;
 
-    const authProvider = await this.authProviderRepository.create(
+    const authProvider = await this.repository.create(
       {
         id: new UUID().value,
         user: {

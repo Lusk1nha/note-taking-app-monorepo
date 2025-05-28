@@ -4,8 +4,12 @@ import { Role } from 'src/common/roles/roles.util';
 import { AdminsService } from '../admins/admin.service';
 import { UsersService } from '../users/users.service';
 
+interface IRolesService {
+  getRolesByUserId(id: UUID): Promise<Role[]>;
+}
+
 @Injectable()
-export class RolesService {
+export class RolesService implements IRolesService {
   private readonly logger = new Logger(RolesService.name);
 
   constructor(

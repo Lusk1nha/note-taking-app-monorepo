@@ -6,6 +6,7 @@ import { Role } from 'src/common/roles/roles.util';
 
 import { CreateEmailInput, CreateEmailOutput } from './dto/emails.post.dto';
 import { EmailsService } from './emails.service';
+import { EmailQueueFactory } from 'src/queues/email/factories/email-queue.factory';
 
 @Controller('emails')
 @ApiTags('Emails')
@@ -21,7 +22,8 @@ export class EmailsController {
   })
   @AllowAuthenticated(Role.Admin)
   async testSendEmail(@Body() payload: CreateEmailInput): Promise<CreateEmailOutput> {
-    await this.emailsService.sendEmail(payload);
+    const emailQueue = EmailQueueFactory.create(payload);
+    await this.emailsService.sendEmail(emailQueue);
 
     return {
       message: 'Email sent successfully',

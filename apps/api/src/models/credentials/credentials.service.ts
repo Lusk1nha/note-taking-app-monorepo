@@ -9,17 +9,29 @@ import { CredentialsRepository } from './credentials.repository';
 import { CreateCredentialsInput } from './dto/credentials.post.dto';
 import { CredentialsEntity } from './entity/credentials.entity';
 
+interface ICredentialsService {
+  findByUserId(userId: UUID): Promise<CredentialsEntity[]>;
+  findByEmail(email: Email): Promise<CredentialsEntity | null>;
+  createCredential(
+    data: CreateCredentialsInput,
+    tx?: PrismaTransaction
+  ): Promise<CredentialsEntity>;
+  updatePassword(userId: UUID, password: Password): Promise<void>;
+  updateEmail(userId: UUID, newEmail: Email): Promise<void>;
+  validatePassword(email: Email, password: Password): Promise<boolean>;
+}
+
 @Injectable()
-export class CredentialsService {
+export class CredentialsService implements ICredentialsService {
   private readonly logger = new Logger(CredentialsService.name);
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly credentialsRepository: CredentialsRepository
+    private readonly repository: CredentialsRepository
   ) {}
 
   async findByUserId(userId: UUID): Promise<CredentialsEntity[]> {
-    const response = await this.credentialsRepository.findMany({
+    const response = await this.repository.findMany({
       where: { userId: userId.value },
     });
 
@@ -29,7 +41,7 @@ export class CredentialsService {
   async findByEmail(email: Email): Promise<CredentialsEntity | null> {
     const emailAsString = email.value;
 
-    const response = await this.credentialsRepository.findUnique({
+    const response = await this.repository.findUnique({
       email: emailAsString,
     });
 
@@ -48,7 +60,7 @@ export class CredentialsService {
     const emailAsString = data.email.value;
     const passwordHash = hashPassword(data.password.value);
 
-    const credential = await this.credentialsRepository.create(
+    const credential = await this.repository.create(
       {
         email: emailAsString,
         passwordHash,
@@ -79,7 +91,7 @@ export class CredentialsService {
       const newPasswordHash = hashPassword(password.value);
       const credential = credentials[0];
 
-      await this.credentialsRepository.update(
+      await this.repository.update(
         {
           where: {
             id: credential.id.value,
@@ -106,7 +118,7 @@ export class CredentialsService {
 
       const credential = credentials[0];
 
-      await this.credentialsRepository.update(
+      await this.repository.update(
         {
           where: {
             id: credential.id.value,

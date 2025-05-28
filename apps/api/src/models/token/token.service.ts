@@ -11,8 +11,20 @@ import { CacheRedisRepository } from 'src/common/redis/cache-redis.repository';
 import { REDIS_KEYS, TOKEN_CONFIG_KEYS, TOKEN_TYPES } from './token.constants';
 import { SignedToken, TokenType } from './token.types';
 
+interface ITokenService {
+  generateToken(user: UserEntity): Promise<{ accessToken: SignedToken; refreshToken: SignedToken }>;
+  revalidateRefreshToken(
+    user: UserEntity,
+    previousToken: string
+  ): Promise<{ accessToken: SignedToken; refreshToken: SignedToken }>;
+  revokeToken(token: string): Promise<void>;
+  revokeAllTokens(user: UserEntity): Promise<void>;
+  validateAccessToken(token: string): Promise<any>;
+  validateRefreshToken(token: string): Promise<any>;
+}
+
 @Injectable()
-export class TokenService {
+export class TokenService implements ITokenService {
   private readonly logger = new Logger(TokenService.name);
   private readonly refreshTokenExpirationInSeconds: number;
 

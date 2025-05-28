@@ -24,8 +24,6 @@ export class EmailConsumerService extends WorkerHost {
 
     this.logger.log(`Processing email job with ID: ${payload.id}`);
 
-    console.log(`Email Job Data:`, payload);
-
     try {
       await this.mailerService.sendMail({
         template: payload.template,

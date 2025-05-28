@@ -1,39 +1,39 @@
 import { UUID } from 'src/common/entities/uuid/uuid';
-import { TEMPLATES_NAMES_TYPE } from 'src/common/templates/templates.common';
+import { TemplatesNamesType, TemplateSettings } from 'src/common/templates/templates.types';
 
-export interface EmailQueueData {
-  template?: TEMPLATES_NAMES_TYPE;
+export type EmailQueueData = {
+  template?: TemplatesNamesType;
   context?: Record<string, any>;
-
   to: string;
   from?: string;
   cc?: string;
-  subject: string;
+  subject?: string;
   body?: string;
-}
+};
 
 export class EmailQueueEntity {
-  constructor(data: EmailQueueData) {
-    this.id = new UUID().value;
+  readonly id: string;
+  readonly template?: TemplatesNamesType;
+  readonly context: Readonly<Record<string, any>>;
+  readonly to: string;
+  readonly from?: string;
+  readonly cc?: string;
+  readonly subject?: string;
+  readonly body?: string;
 
-    this.template = data?.template;
-    this.context = data?.context;
+  constructor(data: EmailQueueData, templateSettings?: TemplateSettings) {
+    this.id = new UUID().value;
+    this.template = data.template;
+    this.context = Object.freeze({
+      ...templateSettings?.defaultContext,
+      ...data.context,
+      currentYear: new Date().getFullYear(),
+    });
 
     this.to = data.to;
-    this.from = data.from;
-
+    this.from = data.from || 'noreply@company.com';
     this.cc = data.cc;
-    this.subject = data.subject;
+    this.subject = data.subject || templateSettings?.subject;
     this.body = data.body;
   }
-
-  template?: TEMPLATES_NAMES_TYPE;
-  context?: Record<string, any>;
-
-  id: string;
-  to: string;
-  from?: string;
-  cc?: string;
-  subject: string;
-  body?: string;
 }

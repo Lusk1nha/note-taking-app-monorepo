@@ -1,15 +1,18 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { CreateEmailInput } from './dto/emails.post.dto';
 import { EmailProducerService } from 'src/queues/email/email-producer.service';
 import { UUID } from 'src/common/entities/uuid/uuid';
 
 import { Job } from 'bullmq';
 import { EmailQueueData, EmailQueueEntity } from 'src/queues/email/entity/email-queue.entity';
 
+interface IEmailsService {
+  sendEmail(emailQueue: EmailQueueEntity): Promise<Job<EmailQueueData>>;
+}
+
 @Injectable()
-export class EmailsService {
+export class EmailsService implements IEmailsService {
   private readonly logger = new Logger(EmailsService.name);
   private readonly fromEmailAddress: string;
 
@@ -26,13 +29,11 @@ export class EmailsService {
     this.fromEmailAddress = emailAddress;
   }
 
-  async sendEmail(payload: EmailQueueData): Promise<Job<EmailQueueData>> {
+  async sendEmail(emailQueue: EmailQueueEntity): Promise<Job<EmailQueueData>> {
     const id = new UUID();
 
     this.logger.log(`Sending email with ID: ${id.value}`);
 
-    const email = new EmailQueueEntity(payload);
-
-    return await this.emailQueue.sendEmail(email);
+    return await this.emailQueue.sendEmail(emailQueue);
   }
 }

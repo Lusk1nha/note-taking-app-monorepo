@@ -19,9 +19,28 @@ import { UUID } from 'src/common/entities/uuid/uuid';
 import { TokenService } from '../token/token.service';
 import { AuthValidators } from './auth.validators';
 import { EmailsService } from '../emails/emails.service';
+import { EmailQueueFactory } from 'src/queues/email/factories/email-queue.factory';
+import { SignedToken } from '../token/token.types';
+
+interface IAuthService {
+  signUp(email: Email, password: Password): Promise<UserEntity>;
+  signIn(
+    email: Email,
+    password: Password
+  ): Promise<{
+    accessToken: SignedToken;
+    refreshToken: SignedToken;
+  }>;
+  logout(userId: UUID, refreshToken: string): Promise<void>;
+  logoutAll(userId: UUID, refreshToken: string): Promise<void>;
+  revalidateToken(token: string): Promise<{
+    accessToken: SignedToken;
+    refreshToken: SignedToken;
+  }>;
+}
 
 @Injectable()
-export class AuthService {
+export class AuthService implements IAuthService {
   private readonly logger = new Logger(AuthService.name);
 
   constructor(
@@ -40,14 +59,15 @@ export class AuthService {
       const user = await this.createUserWithCredentials(tx, email, password);
       this.logger.log(`User registered successfully: ${user.id.value}`);
 
-      await this.emailService.sendEmail({
+      const emailQueue = EmailQueueFactory.create({
         template: 'register',
         to: email.value,
-        subject: 'Welcome to Our Service',
         context: {
           email: email.value,
         },
       });
+
+      this.emailService.sendEmail(emailQueue);
 
       return user;
     });
@@ -63,6 +83,17 @@ export class AuthService {
 
     await this.validatePassword(credential.email, password);
     const user = await this.getValidatedUser(credential.userId);
+
+    const emailQueue = EmailQueueFactory.create({
+      template: 'login-notification',
+      to: email.value,
+      context: {
+        email: email.value,
+        loginTime: new Date().toLocaleString(),
+      },
+    });
+
+    this.emailService.sendEmail(emailQueue);
 
     this.logger.log(`User logged in successfully: ${user.id.value}`);
     return this.tokenService.generateToken(user);
@@ -114,6 +145,7 @@ export class AuthService {
 
   private async getValidatedUser(userId: UUID): Promise<UserEntity> {
     const user = await this.usersService.findById(userId);
+
     AuthValidators.validateExistingUser(user);
 
     return user as UserEntity;
