@@ -17,11 +17,14 @@ import { EmailsModule } from '../emails/emails.module';
 import { RolesModule } from '../roles/roles.module';
 import { TokenModule } from '../token/token.module';
 
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+
     MailerModule.forRoot({
       transport: {
         host: process.env.EMAIL_HOST,
@@ -29,6 +32,18 @@ import { TokenModule } from '../token/token.module';
         auth: {
           user: process.env.EMAIL_USERNAME,
           pass: process.env.EMAIL_PASSWORD,
+        },
+      },
+
+      defaults: {
+        from: process.env.EMAIL_FROM_ADDRESS,
+      },
+
+      template: {
+        dir: process.cwd() + '/src/templates',
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: false,
         },
       },
     }),

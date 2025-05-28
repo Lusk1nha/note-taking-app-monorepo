@@ -5,10 +5,11 @@ import { TokenModule } from '../token/token.module';
 import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { EmailsModule } from '../emails/emails.module';
 
 @Module({
+  imports: [EmailsModule, CredentialsModule, UsersModule, AuthProviderModule, TokenModule],
   providers: [AuthService],
   controllers: [AuthController],
-  imports: [CredentialsModule, UsersModule, AuthProviderModule, TokenModule],
 })
 export class AuthModule {}

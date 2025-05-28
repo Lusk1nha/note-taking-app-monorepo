@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import { BaseHttpException } from 'src/common/exceptions/exceptions.common';
+import { BaseHttpException } from 'src/common/exceptions/exceptions.utils';
 
 export class CurrentUserNotFoundException extends BaseHttpException {
   constructor() {

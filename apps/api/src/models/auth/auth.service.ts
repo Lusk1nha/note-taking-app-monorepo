@@ -18,6 +18,7 @@ import { Password } from 'src/common/entities/password/password';
 import { UUID } from 'src/common/entities/uuid/uuid';
 import { TokenService } from '../token/token.service';
 import { AuthValidators } from './auth.validators';
+import { EmailsService } from '../emails/emails.service';
 
 @Injectable()
 export class AuthService {
@@ -28,7 +29,8 @@ export class AuthService {
     private readonly tokenService: TokenService,
     private readonly authProviderService: AuthProviderService,
     private readonly credentialsService: CredentialsService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    private readonly emailService: EmailsService
   ) {}
 
   async signUp(email: Email, password: Password): Promise<UserEntity> {
@@ -37,6 +39,16 @@ export class AuthService {
     return this.prisma.$transaction(async (tx: PrismaTransaction) => {
       const user = await this.createUserWithCredentials(tx, email, password);
       this.logger.log(`User registered successfully: ${user.id.value}`);
+
+      await this.emailService.sendEmail({
+        template: 'register',
+        to: email.value,
+        subject: 'Welcome to Our Service',
+        context: {
+          email: email.value,
+        },
+      });
+
       return user;
     });
   }

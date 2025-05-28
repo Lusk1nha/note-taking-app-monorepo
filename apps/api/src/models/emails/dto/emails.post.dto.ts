@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
-import { EmailEntity } from '../entity/emails.entity';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CreateEmailInput {
   @ApiProperty({
@@ -20,9 +19,15 @@ export class CreateEmailInput {
   })
   @IsString()
   to: string;
+
+  @ApiProperty({
+    description: 'CC email address (optional)',
+  })
+  @IsString()
+  @IsOptional()
+  cc?: string;
 }
 
 export class CreateEmailOutput {
-  email: EmailEntity;
   message: 'Email sent successfully';
 }

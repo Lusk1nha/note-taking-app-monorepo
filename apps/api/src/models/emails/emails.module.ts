@@ -1,14 +1,15 @@
 import { Global, Module } from '@nestjs/common';
 import { TokenModule } from '../token/token.module';
 import { EmailsController } from './emails.controller';
-import { EmailsRepository } from './emails.repository';
+
 import { EmailsService } from './emails.service';
+import { EmailQueueModule } from 'src/queues/email/email-queue.module';
 
 @Global()
 @Module({
-  imports: [TokenModule],
+  imports: [TokenModule, EmailQueueModule],
   controllers: [EmailsController],
-  providers: [EmailsRepository, EmailsService],
+  providers: [EmailsService],
   exports: [EmailsService],
 })
 export class EmailsModule {}

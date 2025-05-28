@@ -4,7 +4,7 @@ import { UsersRepository } from './users.repository';
 import { UUID } from 'src/common/entities/uuid/uuid';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { PrismaTransaction } from 'src/common/prisma/prisma.type';
-import { EmailsService } from '../emails/emails.service';
+
 import { UpdateUserInput } from './dto/users.patch.dto';
 import { UserEntity } from './entity/user.entity';
 import { UserNotFoundException } from './errors/users.errors';
@@ -15,8 +15,7 @@ export class UsersService {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly usersRepository: UsersRepository,
-    private readonly emailsService: EmailsService
+    private readonly usersRepository: UsersRepository
   ) {}
 
   async findById(id: UUID): Promise<UserEntity | null> {

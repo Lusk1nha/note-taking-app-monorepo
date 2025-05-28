@@ -1,11 +1,12 @@
-import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { EmailStatus } from '@prisma/client';
-import { UUID } from 'src/common/entities/uuid/uuid';
+
 import { CreateEmailInput } from './dto/emails.post.dto';
-import { EmailsRepository } from './emails.repository';
-import { EmailEntity } from './entity/emails.entity';
+import { EmailProducerService } from 'src/queues/email/email-producer.service';
+import { UUID } from 'src/common/entities/uuid/uuid';
+
+import { Job } from 'bullmq';
+import { EmailQueueData, EmailQueueEntity } from 'src/queues/email/entity/email-queue.entity';
 
 @Injectable()
 export class EmailsService {
@@ -14,8 +15,7 @@ export class EmailsService {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly mailerService: MailerService,
-    private readonly emailsRepository: EmailsRepository
+    private readonly emailQueue: EmailProducerService
   ) {
     const emailAddress = this.configService.get<string>('EMAIL_FROM_ADDRESS');
 
@@ -26,53 +26,13 @@ export class EmailsService {
     this.fromEmailAddress = emailAddress;
   }
 
-  async sendEmail(userId: UUID, payload: CreateEmailInput): Promise<EmailEntity> {
+  async sendEmail(payload: EmailQueueData): Promise<Job<EmailQueueData>> {
     const id = new UUID();
 
-    const email = await this.emailsRepository.create({
-      from: this.fromEmailAddress,
-      id: id.value,
-      user: {
-        connect: {
-          id: userId.value,
-        },
-      },
-      subject: payload.subject,
-      body: payload.body,
-      to: payload.to,
-      status: EmailStatus.PENDING,
-    });
+    this.logger.log(`Sending email with ID: ${id.value}`);
 
-    const mailer = await this.mailerService.sendMail({
-      messageId: id.value,
-      to: payload.to,
-      from: this.fromEmailAddress,
-      subject: payload.subject,
-      text: payload.body,
-    });
+    const email = new EmailQueueEntity(payload);
 
-    if (mailer) {
-      await this._updateEmailToSent(id);
-    } else {
-      await this._updateEmailToFailed(id);
-    }
-
-    return new EmailEntity(email);
-  }
-
-  private async _updateEmailToSent(id: UUID): Promise<void> {
-    await this.emailsRepository.update(id.value, {
-      status: EmailStatus.SENT,
-    });
-
-    this.logger.log(`Email with ID ${id.value} updated to SENT`);
-  }
-
-  private async _updateEmailToFailed(id: UUID): Promise<void> {
-    await this.emailsRepository.update(id.value, {
-      status: EmailStatus.FAILED,
-    });
-
-    this.logger.error(`Email with ID ${id.value} failed to send`);
+    return await this.emailQueue.sendEmail(email);
   }
 }

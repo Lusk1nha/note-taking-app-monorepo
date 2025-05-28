@@ -31,7 +31,7 @@ model Credential {
   email        String   @unique @db.VarChar(255)
   passwordHash String   @map("password_hash") @db.VarChar(255)
   userId       String   @db.VarChar(255)
-  user         User     @relation(fields: [userId], references: [id])
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt    DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
 
@@ -48,7 +48,6 @@ model User {
   admin        Admin[]
   authProvider AuthProvider[]
   credential   Credential[]
-  Email        Email[]
 
   @@map("users")
 }
@@ -66,21 +65,4 @@ enum EmailStatus {
   PENDING
 
   @@map("email_status")
-}
-
-model Email {
-  id      String      @id @db.VarChar(255)
-  userId  String      @db.VarChar(255)
-  from    String      @db.VarChar(500)
-  to      String      @db.Text
-  subject String      @db.VarChar(255)
-  body    String      @db.Text
-  status  EmailStatus @map("status")
-
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@map("emails")
 }

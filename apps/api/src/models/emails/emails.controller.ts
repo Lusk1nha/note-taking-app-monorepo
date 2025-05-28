@@ -1,9 +1,9 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth.decorator';
-import { UUID } from 'src/common/entities/uuid/uuid';
+import { AllowAuthenticated } from 'src/common/auth/auth.decorator';
+
 import { Role } from 'src/common/roles/roles.util';
-import { UserAuthType } from 'src/common/types';
+
 import { CreateEmailInput, CreateEmailOutput } from './dto/emails.post.dto';
 import { EmailsService } from './emails.service';
 
@@ -14,22 +14,16 @@ import { EmailsService } from './emails.service';
 export class EmailsController {
   constructor(private readonly emailsService: EmailsService) {}
 
-  @Post('test-send')
+  @Post('send-test')
   @ApiOperation({
     summary: 'Test send email',
     description: 'Endpoint to test sending an email',
   })
   @AllowAuthenticated(Role.Admin)
-  async testSendEmail(
-    @GetUser() currentUser: UserAuthType,
-    @Body() payload: CreateEmailInput
-  ): Promise<CreateEmailOutput> {
-    const userId = new UUID(currentUser.sub);
-
-    const email = await this.emailsService.sendEmail(userId, payload);
+  async testSendEmail(@Body() payload: CreateEmailInput): Promise<CreateEmailOutput> {
+    await this.emailsService.sendEmail(payload);
 
     return {
-      email,
       message: 'Email sent successfully',
     };
   }
